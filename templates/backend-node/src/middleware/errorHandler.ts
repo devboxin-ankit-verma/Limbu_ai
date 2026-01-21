@@ -7,6 +7,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from '../constants/api';
 import { ErrorMessages } from '../constants/errors';
+import {config} from '../config/index';
 
 export const errorHandler = (
   err: Error,
@@ -22,6 +23,6 @@ export const errorHandler = (
   
   res.status(statusCode).json({
     error: message,
-    ...(process.env.DEBUG === 'true' && { details: err.message })
+    ...(config.debug === true && { details: err.message })
   });
 };

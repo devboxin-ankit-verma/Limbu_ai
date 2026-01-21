@@ -1,0 +1,6 @@
+{
+  "rules": [
+    ".cursor/rules.md"
+  ],
+  "alwaysApplyRules": true
+}

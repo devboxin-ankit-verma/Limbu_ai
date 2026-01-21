@@ -10,6 +10,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "validate:env": "node scripts/validate-env.js",
+    "validate": "npm run lint && npm run validate:env",
     "format": "prettier --write \"src/**/*.ts\""
   },
   "keywords": [],

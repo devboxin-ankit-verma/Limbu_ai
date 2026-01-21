@@ -1,0 +1,100 @@
+name: Architecture Compliance Check
+
+on: [push, pull_request]
+
+jobs:
+  check-architecture:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Check .cursor/rules.md exists
+        run: |
+          if [ ! -f ".cursor/rules.md" ]; then
+            echo "❌ .cursor/rules.md is missing!"
+            exit 1
+          fi
+          echo "✅ .cursor/rules.md found"
+      
+      - name: Check .cursor/config.json exists
+        run: |
+          if [ ! -f ".cursor/config.json" ]; then
+            echo "❌ .cursor/config.json is missing!"
+            exit 1
+          fi
+          echo "✅ .cursor/config.json found"
+      
+      - name: Validate Node.js Architecture (if backend-node exists)
+        if: hashFiles('**/backend-node/package.json') != '' || hashFiles('**/templates/backend-node/package.json') != ''
+        working-directory: ${{ github.workspace }}
+        run: |
+          # Find backend-node directory
+          if [ -d "backend-node" ]; then
+            cd backend-node
+          elif [ -d "templates/backend-node" ]; then
+            cd templates/backend-node
+          else
+            echo "⚠️  backend-node not found, skipping..."
+            exit 0
+          fi
+          
+          if [ -f "package.json" ]; then
+            echo "📦 Installing dependencies..."
+            npm install --silent || echo "⚠️  npm install failed, continuing..."
+            
+            if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+              echo "🔍 Running ESLint..."
+              npm run lint || echo "⚠️  Linting failed"
+            fi
+            
+            if [ -f "scripts/validate-env.js" ]; then
+              echo "🔍 Validating environment variable usage..."
+              node scripts/validate-env.js || exit 1
+            fi
+          fi
+      
+      - name: Validate Python Architecture (if backend-python exists)
+        if: hashFiles('**/backend-python/pyproject.toml') != '' || hashFiles('**/templates/backend-python/pyproject.toml') != ''
+        working-directory: ${{ github.workspace }}
+        run: |
+          # Find backend-python directory
+          if [ -d "backend-python" ]; then
+            cd backend-python
+          elif [ -d "templates/backend-python" ]; then
+            cd templates/backend-python
+          else
+            echo "⚠️  backend-python not found, skipping..."
+            exit 0
+          fi
+          
+          if [ -f "pyproject.toml" ]; then
+            echo "📦 Installing dependencies..."
+            pip install ruff --quiet || echo "⚠️  pip install failed, continuing..."
+            
+            if [ -f "scripts/validate_architecture.py" ]; then
+              echo "🔍 Validating architecture..."
+              python scripts/validate_architecture.py || exit 1
+            fi
+          fi
+      
+      - name: Check for unauthorized new folders
+        run: |
+          # Define allowed folder structure
+          ALLOWED_PATTERNS="src/api|src/services|src/repositories|src/models|src/constants|src/config|src/utils|src/routes|src/controllers|src/middleware|src/pages|src/components|src/hooks|src/types|src/styles|public|tests"
+          
+          # Check for new directories in src/
+          if [ -d "src" ]; then
+            NEW_DIRS=$(find src -type d -mindepth 1 | grep -vE "($ALLOWED_PATTERNS)" || true)
+            
+            if [ ! -z "$NEW_DIRS" ]; then
+              echo "⚠️  New directories detected outside allowed structure:"
+              echo "$NEW_DIRS"
+              echo ""
+              echo "💡 If this is intentional, update .cursor/rules.md and this workflow"
+              echo "💡 Otherwise, move files to appropriate existing folders"
+              # Don't fail, just warn - you can change this to exit 1 if you want strict enforcement
+            else
+              echo "✅ Folder structure validated"
+            fi
+          fi

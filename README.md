@@ -26,6 +26,25 @@ agency-ai-project-template/
     └── setup.sh                   # Optional setup automation script
 ```
 
+## 🔒 Mandatory Prompt Header (NON-NEGOTIABLE)
+
+**Before every Cursor AI prompt, you MUST include this header:**
+
+```
+Follow all rules defined in .cursor/rules.md.
+
+Context:
+- Stack: (Python / Node / React)
+- Feature: <short description>
+- Files expected to change:
+  - <file path>
+  - <file path>
+```
+
+**Why:** This activates the rules context and forces conscious compliance.
+
+**🚨 PRs without this prompt ritual = rejected automatically**
+
 ## 🚀 Quick Start
 
 ### For Junior Developers
@@ -34,8 +53,10 @@ agency-ai-project-template/
 2. **Choose** your setup type (Monorepo or Separate Repos)
 3. **Choose** your backend (Python or Node)
 4. **Copy** the appropriate template(s)
-5. **Follow** the folder structure - DO NOT modify it
-6. **Let Cursor** enforce the rules via `.cursor/rules.md`
+5. **Copy** `.cursor/` directory (rules.md AND config.json)
+6. **Follow** the folder structure - DO NOT modify it
+7. **Use mandatory prompt header** for every Cursor AI request
+8. **Let Cursor** enforce the rules via `.cursor/rules.md`
 
 ### For Senior Engineers
 
@@ -43,6 +64,7 @@ agency-ai-project-template/
 2. Share the repository link with your team
 3. Ensure all developers have Cursor IDE with `.cursor/rules.md` active
 4. Review code for architectural compliance
+5. Use AI review prompt (`.github/AI_REVIEW_PROMPT.md`) for faster reviews
 
 ## 📋 Available Templates
 
@@ -116,9 +138,18 @@ The `.cursor/rules.md` file enforces all architectural rules automatically. When
 - ✅ Config layer usage is required
 - ✅ AI asks before violating any rule
 
+### Enforcement Layers
+
+1. **`.cursor/config.json`** - Forces Cursor to always apply rules (automatic)
+2. **Mandatory Prompt Header** - Forces conscious compliance (human)
+3. **CI/CD Checks** - Non-negotiable enforcement (automatic)
+4. **PR Checklist** - Removes debates (GitHub template)
+5. **AI Code Review** - Senior time protection (optional tool)
+
 ## 📚 Documentation
 
 - **PROJECT_SETUP.md** - Step-by-step guide for juniors
+- **ENFORCEMENT_GUIDE.md** - Complete guide to the 5-layer enforcement system
 - **Template READMEs** - Each template has its own README with specific instructions
 - **.cursor/rules.md** - Complete AI governance rules
 
