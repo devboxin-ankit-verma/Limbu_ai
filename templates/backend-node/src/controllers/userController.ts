@@ -9,6 +9,7 @@ import { Request, Response } from 'express';
 import { UserService, UserNotFoundError, UserAlreadyExistsError } from '../services/userService';
 import { StatusCodes } from '../constants/api';
 import { ErrorMessages } from '../constants/errors';
+import { UserRepository } from '../repositories/userRepository';
 
 /**
  * Get all users.
@@ -23,7 +24,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
     
     const userService = new UserService(req.app.get('userRepository'));
     const users = await userService.getAllUsers(skip, limit);
-    
+
     res.status(StatusCodes.OK).json(users);
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
