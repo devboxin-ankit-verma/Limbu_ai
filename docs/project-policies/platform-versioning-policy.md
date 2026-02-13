@@ -1,4 +1,4 @@
-# ApexNeural AI Project Template
+# AI Project Template
 
 ## Platform Versioning & Tag Management Policy
 

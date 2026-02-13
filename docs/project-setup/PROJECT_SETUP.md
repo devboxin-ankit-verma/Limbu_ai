@@ -1,4 +1,4 @@
-# ApexNeural AI Project Template — Project Setup Guide
+# AI Project Template — Project Setup Guide
 
 This guide is for developers starting a new project from the platform template.
 
@@ -54,7 +54,7 @@ rm -rf .git
 ```bash
 git init
 git add .
-git commit -m "Initial commit from ApexNeural Platform v1.0.0"
+git commit -m "Initial commit from  Platform v1.0.0"
 ```
 
 (Use the actual tag in the message, e.g. `v1.0.0`.)
@@ -75,8 +75,8 @@ git push -u origin main
 
 Confirm which platform version your project is based on:
 
-- Check **`platform/version.json`** (if present), or  
-- Use the initial commit message (e.g. "Initial commit from ApexNeural Platform v1.0.0").
+- Check **`platform/version.json`** (if present), or
+- Use the initial commit message (e.g. "Initial commit from Platform v1.0.0").
 
 This version is the one you must follow for architecture and structure.
 
@@ -210,8 +210,8 @@ You do **not** upgrade automatically.
 
 Upgrade only when:
 
-- A senior engineer instructs you to, or  
-- A security or critical fix is required, or  
+- A senior engineer instructs you to, or
+- A security or critical fix is required, or
 - An official migration guide is provided for that version.
 
 See [platform-versioning-policy.md](./platform-versioning-policy.md) for the full upgrade policy.
@@ -255,11 +255,11 @@ Details are in `.cursor/rules.md`.
 
 This template exists to:
 
-- Prevent technical debt  
-- Enforce architecture discipline  
-- Standardize AI-generated code  
-- Improve scalability  
-- Reduce future rewrites  
+- Prevent technical debt
+- Enforce architecture discipline
+- Standardize AI-generated code
+- Improve scalability
+- Reduce future rewrites
 
 **Architecture discipline > Speed.**  
 **Always ask if unsure.**
