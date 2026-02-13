@@ -7,6 +7,7 @@ This guide is for junior developers starting a new project using this template.
 1. **Read this entire document** before copying any files
 2. **Understand** that the folder structure is fixed - you cannot modify it
 3. **Know** that Cursor AI will enforce these rules automatically via `.cursor/rules.md`
+4. **Understand** that you MUST use the mandatory prompt header for every Cursor AI request
 
 ## 🎯 Step 1: Choose Your Setup Type
 
@@ -100,6 +101,31 @@ cp -r /path/to/template/templates/backend-python/* .
 cd /path/to/your/frontend
 cp -r /path/to/template/templates/frontend-react/* .
 ```
+
+## 🔒 Step 4.5: Copy Cursor Configuration (CRITICAL)
+
+**After copying templates, you MUST copy the Cursor configuration:**
+
+```bash
+# Copy .cursor directory (contains both rules.md and config.json)
+cp -r /path/to/template/.cursor ./
+
+# Or if .cursor already exists, ensure config.json is present:
+mkdir -p .cursor
+cp /path/to/template/.cursor/config.json ./.cursor/config.json
+cp /path/to/template/.cursor/rules.md ./.cursor/rules.md
+```
+
+**Why this is critical:**
+- `.cursor/config.json` forces Cursor IDE to always apply rules
+- Without it, Cursor may not enforce architectural rules
+- This is the single most important technical step
+
+**Verification:**
+1. Open Cursor IDE in your project
+2. Try to create a file in wrong location
+3. Cursor should ask about placement → Rules working ✅
+4. If it creates files without asking → Rules not loaded ❌
 
 ## ⚙️ Step 5: Setup Environment Variables
 
