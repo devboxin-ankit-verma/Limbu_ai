@@ -9,9 +9,13 @@ import cors from 'cors';
 import { config } from './config';
 import { errorHandler } from './middleware/errorHandler';
 import { routes } from './routes';
+import { registerRepositories } from './dependencies/register';
 
 // Initialize Express app
 const app: Express = express();
+
+// Register repositories (and other app-scoped deps) in one place
+registerRepositories(app);
 
 // Middleware
 app.use(cors({

@@ -6,38 +6,15 @@ NO business logic (use Service), NO database queries (use Repository).
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from typing import List
 
 from src.services.user_service import UserService, UserNotFoundError, UserAlreadyExistsError
-from src.repositories.user_repository import UserRepository
-from src.models.user import User
+from src.dependencies.dependencies import get_user_service
 from src.constants.api import StatusCodes
 from src.constants.errors import ErrorMessages
 
 # Create router
 router = APIRouter()
-
-
-# Dependency to get database session (simplified for example)
-def get_db():
-    """Get database session - placeholder for actual implementation."""
-    # In real implementation, this would yield a database session
-    pass
-
-
-def get_user_service(db: Session = Depends(get_db)) -> UserService:
-    """
-    Dependency to get UserService instance.
-    
-    Args:
-        db: Database session
-        
-    Returns:
-        UserService instance
-    """
-    user_repository = UserRepository(db)
-    return UserService(user_repository)
 
 
 @router.get("/users", response_model=List[dict], status_code=StatusCodes.OK)
