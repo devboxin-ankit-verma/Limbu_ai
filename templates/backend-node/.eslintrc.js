@@ -82,5 +82,12 @@ module.exports = {
         'no-restricted-imports': 'off',
       },
     },
+    {
+      // Dependencies/register is the composition root – it may import repositories to register them
+      files: ['src/dependencies/register.ts'],
+      rules: {
+        'no-restricted-imports': 'off',
+      },
+    },
   ],
 };
