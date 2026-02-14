@@ -6,7 +6,8 @@
  */
 
 import { Request, Response } from "express";
-import { UserService, UserNotFoundError, UserAlreadyExistsError } from "../services/userService";
+import { UserNotFoundError, UserAlreadyExistsError } from "../services/userService";
+import { getUserService } from "../dependencies/dependencies";
 import { StatusCodes } from "../constants/api";
 import { ErrorMessages } from "../constants/errors";
 
@@ -21,7 +22,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
     const skip = parseInt(req.query.skip as string) || 0;
     const limit = parseInt(req.query.limit as string) || 100;
 
-    const userService = new UserService(req.app.get("userRepository"));
+    const userService = getUserService(req);
     const users = await userService.getAllUsers(skip, limit);
 
     res.status(StatusCodes.OK).json(users);
@@ -41,7 +42,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.userId);
-    const userService = new UserService(req.app.get("userRepository"));
+    const userService = getUserService(req);
     const user = await userService.getUserById(userId);
 
     res.status(StatusCodes.OK).json(user);
@@ -66,7 +67,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
  */
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userService = new UserService(req.app.get("userRepository"));
+    const userService = getUserService(req);
     const user = await userService.createUser(req.body);
 
     res.status(StatusCodes.CREATED).json(user);
@@ -92,7 +93,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.userId);
-    const userService = new UserService(req.app.get("userRepository"));
+    const userService = getUserService(req);
     const user = await userService.updateUser(userId, req.body);
 
     res.status(StatusCodes.OK).json(user);
@@ -122,7 +123,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.userId);
-    const userService = new UserService(req.app.get("userRepository"));
+    const userService = getUserService(req);
     await userService.deleteUser(userId);
 
     res.status(StatusCodes.NO_CONTENT).send();
