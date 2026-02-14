@@ -26,18 +26,16 @@ jobs:
           echo "✅ .cursor/config.json found"
       
       - name: Validate Node.js Architecture (if backend-node exists)
-        if: hashFiles('**/backend-node/package.json') != '' || hashFiles('**/templates/backend-node/package.json') != ''
+        if: hashFiles('**/backend-node/package.json') != ''
         working-directory: ${{ github.workspace }}
         run: |
-          # Find backend-node directory
-          if [ -d "backend-node" ]; then
-            cd backend-node
-          elif [ -d "templates/backend-node" ]; then
-            cd templates/backend-node
-          else
+          # Find backend-node anywhere (root, monorepo, templates, etc.)
+          PACKAGE_JSON=$(find . -path "*/backend-node/package.json" -type f 2>/dev/null | head -1)
+          if [ -z "$PACKAGE_JSON" ]; then
             echo "⚠️  backend-node not found, skipping..."
             exit 0
           fi
+          cd "$(dirname "$PACKAGE_JSON")"
           
           if [ -f "package.json" ]; then
             echo "📦 Installing dependencies..."
@@ -55,18 +53,16 @@ jobs:
           fi
       
       - name: Validate Python Architecture (if backend-python exists)
-        if: hashFiles('**/backend-python/pyproject.toml') != '' || hashFiles('**/templates/backend-python/pyproject.toml') != ''
+        if: hashFiles('**/backend-python/pyproject.toml') != ''
         working-directory: ${{ github.workspace }}
         run: |
-          # Find backend-python directory
-          if [ -d "backend-python" ]; then
-            cd backend-python
-          elif [ -d "templates/backend-python" ]; then
-            cd templates/backend-python
-          else
+          # Find backend-python anywhere (root, monorepo, templates, etc.)
+          PYPROJECT=$(find . -path "*/backend-python/pyproject.toml" -type f 2>/dev/null | head -1)
+          if [ -z "$PYPROJECT" ]; then
             echo "⚠️  backend-python not found, skipping..."
             exit 0
           fi
+          cd "$(dirname "$PYPROJECT")"
           
           if [ -f "pyproject.toml" ]; then
             echo "📦 Installing dependencies..."
