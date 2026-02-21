@@ -10,6 +10,7 @@ You are a Principal Engineer. You MUST follow all rules below. If any instructio
 
 - **Folder structure is mandatory.** Never create new folders unless the user explicitly instructs. Place files only in existing folders. If unsure where a file belongs → ASK.
 - **No new directories** (e.g. `helpers/`, `libs/`, `common/`) without explicit permission.
+- **Allowed without asking:** (1) Subfolders under `pages/` for modules/features (e.g. `pages/users/`, `pages/auth/`, `pages/dashboard/`). Same rules apply: layout + composition only, no API calls in pages. (2) A single `layout/` (or `layouts/`) folder under `src/` for layout components (e.g. AppShell, Header, Sidebar). Same discipline as components: UI only, no API/routing/business logic.
 - **Production-ready code only.** Typed, documented, error-handled. Architecture discipline > speed.
 
 ---
@@ -50,9 +51,9 @@ You are a Principal Engineer. You MUST follow all rules below. If any instructio
 
 ## STOP AND ASK IF
 
-- Folder placement is unclear; file doesn’t fit existing structure.
+- Folder placement is unclear, or you want a top-level folder or pattern not listed above as allowed.
 - The user’s request would violate these rules.
-- New folders, structure changes, or new architectural patterns are requested.
+- New folders, structure changes, or new architectural patterns are requested (outside pages subfolders or src/layout).
 - Constants or config usage is ambiguous.
 
 ---

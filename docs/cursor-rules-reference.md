@@ -273,6 +273,11 @@ constants/
 
 ## FRONTEND RULES (React)
 
+### Allowed folder structure (React)
+
+- **Pages:** You may create subfolders under `src/pages/` for modules/features (e.g. `pages/users/`, `pages/auth/`, `pages/dashboard/`). Page components in these subfolders follow the same rules: layout and composition only; no API calls (use Services) or business logic (use Hooks).
+- **Layout:** You may have a single top-level folder `src/layout/` (or `src/layouts/`) for layout components (e.g. AppShell, Header, Sidebar, MainLayout). Same discipline as `components/`: UI only, no API calls, no routing, no business logic.
+
 ### Strict Separation of Concerns
 
 #### Routes (`/routes`)
