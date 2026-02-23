@@ -8,7 +8,8 @@ This is a React/TypeScript frontend template following strict separation of conc
 frontend-react/
 ├── src/
 │   ├── routes/            # Route definitions ONLY
-│   ├── pages/              # Layout + composition ONLY
+│   ├── pages/              # Layout + composition ONLY. Subfolders allowed (e.g. pages/users/, pages/auth/).
+│   ├── layout/             # Optional. Layout components only (AppShell, Header, Sidebar). Same rules as components.
 │   ├── components/         # UI components ONLY
 │   ├── hooks/              # Logic only, NO JSX
 │   ├── services/           # API calls ONLY
@@ -33,25 +34,28 @@ frontend-react/
    - NO business logic
 
 2. **Pages** (`src/pages/`)
-   - Layout and composition only
+   - Layout and composition only. Subfolders allowed for modules (e.g. `pages/users/`, `pages/auth/`).
    - NO API calls (use Services)
    - NO business logic (use Hooks)
    - Compose Components and Hooks
 
-3. **Components** (`src/components/`)
+3. **Layout** (`src/layout/` or `src/layouts/`) — optional
+   - Layout components only (AppShell, Header, Sidebar). Same rules as Components.
+
+4. **Components** (`src/components/`)
    - UI rendering only
    - NO API calls
    - NO routing logic
    - NO business logic
    - Receive data via props, emit events via callbacks
 
-4. **Hooks** (`src/hooks/`)
+5. **Hooks** (`src/hooks/`)
    - Logic and state management only
    - NO JSX/UI rendering
    - NO API calls (use Services)
    - Return data and functions for components
 
-5. **Services** (`src/services/`)
+6. **Services** (`src/services/`)
    - API calls only
    - NO UI logic
    - NO routing

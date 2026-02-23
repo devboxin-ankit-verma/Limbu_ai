@@ -151,7 +151,7 @@ The `.cursor/rules.md` file enforces all architectural rules automatically. When
 - **PROJECT_SETUP.md** - Step-by-step guide for juniors
 - **ENFORCEMENT_GUIDE.md** - Complete guide to the 5-layer enforcement system
 - **Template READMEs** - Each template has its own README with specific instructions
-- **.cursor/rules.md** - Complete AI governance rules
+- **.cursor/rules.md** - Mandatory AI governance rules (short, always applied). **docs/cursor-rules-reference.md** - Full reference with code examples (open when needed).
 
 ## 🎓 How Juniors Use This
 

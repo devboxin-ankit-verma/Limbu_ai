@@ -77,7 +77,7 @@ jobs:
       - name: Check for unauthorized new folders
         run: |
           # Define allowed folder structure
-          ALLOWED_PATTERNS="src/api|src/services|src/repositories|src/models|src/constants|src/config|src/utils|src/routes|src/controllers|src/middleware|src/pages|src/components|src/hooks|src/types|src/styles|public|tests"
+          ALLOWED_PATTERNS="src/api|src/services|src/repositories|src/models|src/constants|src/config|src/utils|src/routes|src/controllers|src/middleware|src/pages|src/components|src/layout|src/layouts|src/hooks|src/types|src/styles|public|tests"
           
           # Check for new directories in src/
           if [ -d "src" ]; then
