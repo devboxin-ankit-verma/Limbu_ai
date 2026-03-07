@@ -1,0 +1,209 @@
+// Prisma schema for SHARE-MARKET
+// Database: MySQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Admin & Users
+// ---------------------------------------------------------------------------
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String  @map("password_hash")
+  name         String?
+  role         String   @default("admin")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  username     String    @unique
+  passwordHash String    @map("password_hash")
+  role         String    @default("trader")
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  wallets      Wallet[]
+  orders       Order[]
+  trades       Trade[]
+  positions    Position[]
+  notifications Notification[]
+}
+
+// ---------------------------------------------------------------------------
+// Markets & Symbols
+// ---------------------------------------------------------------------------
+
+model Market {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String   @unique
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  symbols Symbol[]
+}
+
+model Symbol {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  marketId  Int      @map("market_id")
+  lotSize   Decimal  @map("lot_size") @db.Decimal(18, 8)
+  tickSize  Decimal  @map("tick_size") @db.Decimal(18, 8)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  market    Market        @relation(fields: [marketId], references: [id], onDelete: Restrict)
+  quotes    MarketQuote[]
+  orders    Order[]
+  trades    Trade[]
+  positions Position[]
+}
+
+model MarketQuote {
+  id        Int      @id @default(autoincrement())
+  symbolId  Int      @unique @map("symbol_id")
+  ask       Decimal  @db.Decimal(18, 4)
+  bid       Decimal  @db.Decimal(18, 4)
+  ltp       Decimal  @db.Decimal(18, 4)
+  change    Decimal  @db.Decimal(18, 4)
+  high      Decimal  @db.Decimal(18, 4)
+  low       Decimal  @db.Decimal(18, 4)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  symbol Symbol @relation(fields: [symbolId], references: [id], onDelete: Cascade)
+
+  @@index([symbolId])
+}
+
+// ---------------------------------------------------------------------------
+// Wallets & Ledger
+// ---------------------------------------------------------------------------
+
+model Wallet {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  currency      String    @default("INR")
+  balance       Decimal   @default(0) @db.Decimal(18, 2)
+  lockedBalance Decimal   @default(0) @map("locked_balance") @db.Decimal(18, 2)
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+}
+
+model Transaction {
+  id         Int      @id @default(autoincrement())
+  walletId   Int      @map("wallet_id")
+  type       String   // deposit, withdraw, trade, brokerage, etc.
+  amount     Decimal  @db.Decimal(18, 2) // positive = credit, negative = debit
+  refId      Int?     @map("ref_id") // order id or trade id
+  refType    String?  @map("ref_type") // order, trade
+  metadata   Json?    // extra data
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([walletId])
+  @@index([type, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Orders, Trades, Positions
+// ---------------------------------------------------------------------------
+
+model Order {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  symbolId   Int      @map("symbol_id")
+  side       String   // buy, sell
+  type       String   // market, limit
+  quantity   Decimal  @db.Decimal(18, 8)
+  price      Decimal? @db.Decimal(18, 2) // null for market orders
+  status     String   @default("pending") // pending, filled, cancelled, partially_filled
+  filledQty  Decimal  @default(0) @map("filled_qty") @db.Decimal(18, 8)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  symbol Symbol @relation(fields: [symbolId], references: [id], onDelete: Restrict)
+  trades Trade[]
+}
+
+model Trade {
+  id         Int      @id @default(autoincrement())
+  orderId    Int      @map("order_id")
+  userId     Int      @map("user_id")
+  symbolId   Int      @map("symbol_id")
+  side       String   // buy, sell
+  quantity   Decimal  @db.Decimal(18, 8)
+  price      Decimal  @db.Decimal(18, 2)
+  brokerage  Decimal  @default(0) @db.Decimal(18, 2)
+  executedAt DateTime @default(now()) @map("executed_at")
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  symbol   Symbol   @relation(fields: [symbolId], references: [id], onDelete: Restrict)
+}
+
+model Position {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  symbolId     Int      @map("symbol_id")
+  side         String   // buy, sell
+  quantity     Decimal  @db.Decimal(18, 8)
+  avgPrice     Decimal  @map("avg_price") @db.Decimal(18, 2)
+  currentPrice Decimal? @map("current_price") @db.Decimal(18, 2)
+  openedAt     DateTime @default(now()) @map("opened_at")
+  closedAt     DateTime? @map("closed_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  symbol Symbol @relation(fields: [symbolId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([symbolId])
+  @@index([closedAt])
+}
+
+// ---------------------------------------------------------------------------
+// Notices & Notifications
+// ---------------------------------------------------------------------------
+
+model Notice {
+  id         Int       @id @default(autoincrement())
+  title      String
+  body       String    @db.Text
+  type       String    @default("info") // info, warning, alert
+  target     String    @default("all") // all, traders, admins
+  isActive   Boolean   @default(true) @map("is_active")
+  publishedAt DateTime? @map("published_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  title     String
+  body      String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
