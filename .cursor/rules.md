@@ -49,6 +49,19 @@ You are a Principal Engineer. You MUST follow all rules below. If any instructio
 
 ---
 
+## FLUTTER (app-flutter) — CLEAN ARCHITECTURE
+
+- **Presentation** (`features/*/presentation/`): UI screens and Riverpod providers ONLY. NO business logic, NO direct API calls. Delegates to Domain and Data layers.
+- **Domain** (`features/*/domain/`): Entities and business logic ONLY. NO framework dependencies, NO network/storage access. Pure Dart.
+- **Data** (`features/*/data/`): Repositories and API models ONLY. NO business logic. Maps network responses to domain entities.
+- **Core/Config:** ALL environment variable access ONLY via `core/config/app_config.dart`. NEVER access `dotenv.env` directly.
+- **Core/Network:** ALL HTTP requests through `core/network/api_client.dart`. NEVER create Dio instances in features.
+- **Constants:** All constants in `core/constants/`. No hardcoded values anywhere.
+- **Shared:** Reusable UI only in `shared/widgets/` or `shared/components/`. No business logic, no API calls.
+- **Feature placement:** ALL features must live inside `features/`. Never place feature code in `core/` or `shared/`.
+
+---
+
 ## STOP AND ASK IF
 
 - Folder placement is unclear, or you want a top-level folder or pattern not listed above as allowed.
