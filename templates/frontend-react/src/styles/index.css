@@ -1,0 +1,124 @@
+/**
+ * Global styles.
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.user-list {
+  list-style: none;
+}
+
+.user-item {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.user-item:hover {
+  background-color: #f5f5f5;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: #fee;
+  color: #c33;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+/* Main layout */
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-layout__header {
+  padding: 0.75rem 1.5rem;
+  background-color: #1a1a2e;
+  color: #eee;
+  border-bottom: 1px solid #333;
+}
+
+.main-layout__nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.main-layout__brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #fff;
+  text-decoration: none;
+}
+
+.main-layout__brand:hover {
+  text-decoration: underline;
+}
+
+.main-layout__link {
+  color: #b8b8b8;
+  text-decoration: none;
+}
+
+.main-layout__link:hover {
+  color: #fff;
+}
+
+.main-layout__main {
+  flex: 1;
+}
+
+.main-layout__footer {
+  padding: 1rem 1.5rem;
+  background-color: #f5f5f5;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.main-layout__footer-text {
+  font-size: 0.875rem;
+  color: #666;
+}
