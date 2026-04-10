@@ -1,6 +1,7 @@
 /// Auth state management using Riverpod.
 ///
 /// Exposes AuthNotifier which handles login, register, logout, and restore.
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_client.dart';
@@ -102,11 +103,30 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   String _parseError(Object e) {
-    final msg = e.toString();
-    if (msg.contains('phone already exists')) return 'This phone number is already registered.';
-    if (msg.contains('Invalid phone') || msg.contains('Invalid credentials')) {
-      return 'Incorrect phone number or password.';
+    // Extract actual API error message from Dio response
+    if (e is DioException) {
+      final data = e.response?.data;
+      if (data is Map) {
+        final apiMsg = data['error'] as String? ?? data['message'] as String?;
+        if (apiMsg != null && apiMsg.isNotEmpty) {
+          // Map known backend messages to user-friendly text
+          if (apiMsg.contains('phone already exists') || apiMsg.contains('already exists')) {
+            return 'This phone number is already registered. Please sign in.';
+          }
+          if (apiMsg.contains('Invalid credentials') || apiMsg.contains('Invalid phone')) {
+            return 'Incorrect phone number or password.';
+          }
+          // Return the actual API message for anything else
+          return apiMsg;
+        }
+      }
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.connectionError) {
+        return 'Cannot connect to server. Check your internet connection.';
+      }
     }
+    final msg = e.toString();
     if (msg.contains('SocketException') || msg.contains('Connection')) {
       return 'No internet connection. Please try again.';
     }
