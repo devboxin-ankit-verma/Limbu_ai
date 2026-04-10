@@ -1,223 +1,36 @@
-# Agency AI Project Template
+# Dai Massage Platform
 
-A comprehensive Git template repository for software agencies with strict architectural discipline enforced by Cursor AI.
+A full-stack platform for traditional Indian Dai Massage services.
 
-## 🎯 Purpose
+## Stack
 
-This template eliminates architectural debates and ensures consistency across all projects. Junior developers and AI tools follow pre-defined structures and rules, allowing you to focus on features, not architecture.
+- **Flutter App** — Mobile app for Providers & Service Takers
+- **Node.js + Express + MySQL** — REST API backend (Sequelize ORM)
+- **React Admin Panel** — Web dashboard for admins (Vite + Tailwind CSS)
+- **Razorpay** — Payment gateway
 
-## 🏗️ Repository Structure
-
-```
-agency-ai-project-template/
-├── README.md                      # This file
-├── PROJECT_SETUP.md               # Step-by-step guide for juniors
-├── .cursor/
-│   └── rules.md                   # CRITICAL: Cursor AI governance rules
-├── templates/
-│   ├── backend-python/            # Standalone Python backend template
-│   ├── backend-node/              # Standalone Node backend template
-│   └── frontend-react/            # Standalone React frontend template
-├── monorepo/
-│   ├── backend-python/            # Python backend for monorepo
-│   ├── backend-node/              # Node backend for monorepo
-│   └── frontend-react/            # React frontend for monorepo
-└── scripts/
-    └── setup.sh                   # Optional setup automation script
-```
-
-## 🔒 Mandatory Prompt Header (NON-NEGOTIABLE)
-
-**Before every Cursor AI prompt, you MUST include this header:**
+## Structure
 
 ```
-Follow all rules defined in .cursor/rules.md.
-
-Context:
-- Stack: (Python / Node / React)
-- Feature: <short description>
-- Files expected to change:
-  - <file path>
-  - <file path>
+monorepo/
+├── app-flutter/       # Flutter mobile app
+├── backend-node/      # Node.js REST API
+└── frontend-react/    # React admin panel
 ```
 
-**Why:** This activates the rules context and forces conscious compliance.
+## Setup
 
-**🚨 PRs without this prompt ritual = rejected automatically**
-
-## 🚀 Quick Start
-
-### For Junior Developers
-
-1. **Read** `PROJECT_SETUP.md` first
-2. **Choose** your setup type (Monorepo or Separate Repos)
-3. **Choose** your backend (Python or Node)
-4. **Copy** the appropriate template(s)
-5. **Copy** `.cursor/` directory (rules.md AND config.json)
-6. **Follow** the folder structure - DO NOT modify it
-7. **Use mandatory prompt header** for every Cursor AI request
-8. **Let Cursor** enforce the rules via `.cursor/rules.md`
-
-### For Senior Engineers
-
-1. Mark this repository as a **GitHub Template Repository**
-2. Share the repository link with your team
-3. Ensure all developers have Cursor IDE with `.cursor/rules.md` active
-4. Review code for architectural compliance
-5. Use AI review prompt (`.github/AI_REVIEW_PROMPT.md`) for faster reviews
-
-## 📋 Available Templates
-
-### Backend Options
-
-- **Python** (`templates/backend-python/` or `monorepo/backend-python/`)
-  - FastAPI/Django/Flask compatible
-  - Strict layering: API → Services → Repositories → Models
-  - Pydantic for config and validation
-
-- **Node.js** (`templates/backend-node/` or `monorepo/backend-node/`)
-  - Express/Nest.js compatible
-  - Strict layering: Routes → Controllers → Services → Repositories → Models
-  - TypeScript for type safety
-
-### Frontend Options
-
-- **React** (`templates/frontend-react/` or `monorepo/frontend-react/`)
-  - Vite + TypeScript
-  - Strict separation: Routes → Pages → Components → Hooks → Services
-  - React Router for routing
-
-## 🎯 Key Principles
-
-1. **Zero Architectural Debates** - Structure is fixed, no discussions
-2. **AI-Enforced** - Cursor rules prevent violations automatically
-3. **Template-Based** - Juniors copy, don't design
-4. **Monorepo OR Separate** - Both options supported
-5. **Strict Layering** - Prevents technical debt
-6. **Constants Isolation** - Easy to maintain and update
-7. **Config Layer** - Safe environment variable handling
-
-## 📐 Architecture Rules
-
-### Backend Layering (STRICT)
-
-```
-Routes/Controllers → Services → Repositories → Models
-```
-
-- **Routes/Controllers**: HTTP request/response ONLY
-- **Services**: Business logic ONLY
-- **Repositories**: Database access ONLY
-- **Models**: Data definitions ONLY
-
-### Frontend Separation (STRICT)
-
-```
-Routes → Pages → Components → Hooks → Services
-```
-
-- **Routes**: Route definitions ONLY
-- **Pages**: Layout + composition ONLY
-- **Components**: UI rendering ONLY
-- **Hooks**: Logic only, NO JSX
-- **Services**: API calls ONLY
-
-### Constants & Config
-
-- **NO hardcoded values** - All constants in `/constants`
-- **NO direct env access** - Always use config layer
-- **`.env.example` required** - All projects must have this
-
-## 🔧 Cursor AI Governance
-
-The `.cursor/rules.md` file enforces all architectural rules automatically. When developers use Cursor IDE:
-
-- ✅ Folder structure violations are prevented
-- ✅ Layer violations are caught
-- ✅ Constants usage is enforced
-- ✅ Config layer usage is required
-- ✅ AI asks before violating any rule
-
-### Enforcement Layers
-
-1. **`.cursor/config.json`** - Forces Cursor to always apply rules (automatic)
-2. **Mandatory Prompt Header** - Forces conscious compliance (human)
-3. **CI/CD Checks** - Non-negotiable enforcement (automatic)
-4. **PR Checklist** - Removes debates (GitHub template)
-5. **AI Code Review** - Senior time protection (optional tool)
-
-## 📚 Documentation
-
-- **PROJECT_SETUP.md** - Step-by-step guide for juniors
-- **ENFORCEMENT_GUIDE.md** - Complete guide to the 5-layer enforcement system
-- **Template READMEs** - Each template has its own README with specific instructions
-- **.cursor/rules.md** - Mandatory AI governance rules (short, always applied). **docs/cursor-rules-reference.md** - Full reference with code examples (open when needed).
-
-## 🎓 How Juniors Use This
-
-### Option A: Monorepo
+1. Copy `.env.example` → `.env` in each package and fill values.
+2. Start MySQL and create the database.
+3. Run each package separately:
 
 ```bash
-git clone agency-ai-project-template
-cd agency-ai-project-template
-cp -r monorepo/backend-python my-project/backend
-cp -r monorepo/frontend-react my-project/frontend
-cd my-project
-# Start coding features
+# Backend
+cd monorepo/backend-node && npm install && npm run dev
+
+# Admin Panel
+cd monorepo/frontend-react && npm install && npm run dev
+
+# Flutter App
+cd monorepo/app-flutter && flutter pub get && flutter run
 ```
-
-### Option B: Separate Repos
-
-```bash
-git clone agency-ai-project-template
-cd agency-ai-project-template
-cp -r templates/backend-python ../my-backend
-cp -r templates/frontend-react ../my-frontend
-cd ../my-backend
-# Start coding features
-```
-
-## ⚠️ Important Rules
-
-1. **DO NOT modify folder structure** - It's fixed for consistency
-2. **DO NOT create new folders** - Ask if you need something
-3. **DO NOT access env directly** - Always use config layer
-4. **DO NOT hardcode values** - Use constants
-5. **DO NOT violate layering** - Each layer has one responsibility
-
-## 🔐 Why This Works
-
-| Problem | Solution |
-|---------|----------|
-| AI hallucinating structure | Cursor rules |
-| Junior architectural decisions | Template |
-| Inconsistent repos | Single source |
-| Senior review overload | AI + structure |
-| Scaling team size | System, not people |
-
-## 🧠 Final Mindset Shift
-
-You are not managing developers anymore. You are managing:
-
-- ✅ Code generation pipelines
-- ✅ AI behavior
-- ✅ Architectural contracts
-
-This setup makes your agency:
-
-- ✅ Senior-light
-- ✅ Predictable
-- ✅ Scalable
-- ✅ AI-native
-
-## 📝 License
-
-This template is provided as-is for use within your agency.
-
-## 🤝 Contributing
-
-This is an internal template. Update it as your agency's needs evolve.
-
----
-
-**Remember**: Architecture discipline > Speed. Consistency > Creativity (in structure).

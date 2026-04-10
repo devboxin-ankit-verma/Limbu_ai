@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+:root {
+  --app-bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-2: #f8fbff;
+  --line: #e7edf5;
+  --text: #111827;
+  --muted: #6b7280;
+  --accent: #87f542;
+  --accent-soft: #ebffd9;
+}
+
+[data-theme="dark"] {
+  --app-bg: #0f172a;
+  --surface: #111827;
+  --surface-2: #1f2937;
+  --line: #2b3648;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #87f542;
+  --accent-soft: #1f2e1a;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: var(--app-bg);
+  color: var(--text);
+}
+
+.panel-shell {
+  background: var(--app-bg);
+}
+
+.panel-main {
+  background: var(--surface);
+}
+
+.panel-content {
+  background: var(--app-bg);
+}
+
+.panel-surface {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.panel-topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+}
+
+.panel-nav-item {
+  border-radius: 10px;
+}
+
+.panel-nav-item.active {
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.panel-stat-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.panel-table thead tr {
+  background: #f9fbff;
+}
+
+.panel-toggle {
+  border-color: var(--line);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.panel-chartbox {
+  background: #fbfdff;
+  border: 1px solid #eef3f9;
+}
+
+[data-theme="dark"] .panel-chartbox {
+  background: #0b1220;
+  border-color: #22314a;
+}
+
+/* Dark mode utility overrides for existing Tailwind classes used across pages */
+[data-theme="dark"] .bg-white {
+  background-color: var(--surface) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 {
+  background-color: #182235 !important;
+}
+
+[data-theme="dark"] .border,
+[data-theme="dark"] .border-b,
+[data-theme="dark"] .border-t {
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .text-gray-900,
+[data-theme="dark"] .text-gray-800 {
+  color: #e5e7eb !important;
+}
+
+[data-theme="dark"] .text-gray-700,
+[data-theme="dark"] .text-gray-600,
+[data-theme="dark"] .text-gray-500,
+[data-theme="dark"] .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: #0f172a !important;
+  color: #e5e7eb !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] tr:hover {
+  background: #182235 !important;
+}
