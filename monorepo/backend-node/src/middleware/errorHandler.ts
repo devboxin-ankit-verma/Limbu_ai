@@ -59,6 +59,19 @@ export const errorHandler = (
     return;
   }
 
+  // Sequelize DB error (unknown column, bad SQL, connection issue)
+  if (err.name === 'SequelizeDatabaseError' || err.name === 'SequelizeConnectionError') {
+    const parent = (err as unknown as { parent?: { sqlMessage?: string; code?: string } }).parent;
+    const detail = parent?.sqlMessage ?? err.message;
+    console.error('[DB Error]', detail);
+    res.status(500).json({
+      error: 'A database error occurred. Please try again later.',
+      code: 'DATABASE_ERROR',
+      ...(config.debug && { details: detail }),
+    });
+    return;
+  }
+
   console.error('Unhandled error:', err);
   res.status(500).json({
     error: 'Internal server error',

@@ -31,8 +31,10 @@ async function addIfMissing(
       await qi.addColumn(table, column, def);
       console.log(`[migrate] Added column ${table}.${column}`);
     }
-  } catch {
-    // Table might not exist yet — sequelize.sync() will create it
+  } catch (err) {
+    // Table might not exist yet — sequelize.sync() will create it on next boot
+    const msg = err instanceof Error ? err.message : String(err);
+    console.warn(`[migrate] Skipped ${table}.${column}: ${msg}`);
   }
 }
 
