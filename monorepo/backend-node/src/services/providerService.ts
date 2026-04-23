@@ -12,6 +12,7 @@ import { ErrorMessages } from '../constants/errors';
 import { ProviderModel } from '../models/ProviderModel';
 import { PaymentModel } from '../models/PaymentModel';
 import { ReviewRepository } from '../repositories/reviewRepository';
+import { AccountSettingRepository } from '../repositories/accountSettingRepository';
 
 const razorpay = new Razorpay({
   key_id: config.razorpay.keyId,
@@ -23,12 +24,24 @@ export class ProviderService {
     private readonly providerRepo: ProviderRepository,
     private readonly serviceRepo: MassageServiceRepository,
     private readonly paymentRepo: PaymentRepository,
-    private readonly reviewRepo: ReviewRepository
+    private readonly reviewRepo: ReviewRepository,
+    private readonly accountSettingRepo: AccountSettingRepository
   ) {}
+
+  /** Returns the configured registration fee in rupees (from DB or env fallback). */
+  private async getRegistrationFeeRupees(): Promise<number> {
+    try {
+      const setting = await this.accountSettingRepo.getOrCreateSingleton();
+      return parseFloat(String(setting.registrationFee));
+    } catch {
+      return config.providerRegistrationFee / 100;
+    }
+  }
 
   async getProviderByUserId(userId: number): Promise<ProviderModel> {
     const provider = await this.providerRepo.findByUserId(userId);
     if (!provider) throw new NotFoundError(ErrorMessages.PROVIDER_NOT_FOUND);
+    await this.applyContinuityBonusIfEligible(provider);
     return provider;
   }
 
@@ -80,8 +93,11 @@ export class ProviderService {
       throw new ValidationError('Registration fee already paid');
     }
 
+    const feeRupees = await this.getRegistrationFeeRupees();
+    const feePaise = Math.round(feeRupees * 100);
+
     const order = await razorpay.orders.create({
-      amount: config.providerRegistrationFee,
+      amount: feePaise,
       currency: 'INR',
       receipt: `reg_${userId}_${Date.now()}`,
       notes: { type: 'registration', userId: String(userId) },
@@ -91,13 +107,13 @@ export class ProviderService {
       userId,
       type: 'registration',
       razorpayOrderId: order.id,
-      amount: config.providerRegistrationFee / 100,
+      amount: feeRupees,
       status: 'pending',
     });
 
     return {
       orderId: order.id,
-      amount: config.providerRegistrationFee,
+      amount: feePaise,
       currency: 'INR',
     };
   }
@@ -116,10 +132,13 @@ export class ProviderService {
       throw new ValidationError('Registration fee already marked as paid');
     }
 
+    // Read fee from DB (admin-configurable); fallback to env.
+    const feeInRupees = await this.getRegistrationFeeRupees();
+
     await this.paymentRepo.create({
       userId,
       type: 'registration',
-      amount: 0,
+      amount: feeInRupees,
       status: 'paid',
       razorpayOrderId: null,
       razorpayPaymentId: `manual_${paymentMethod}_${Date.now()}`,
@@ -136,12 +155,31 @@ export class ProviderService {
   async getWalletHistory(userId: number): Promise<{ provider: ProviderModel; txns: unknown[] }> {
     const provider = await this.providerRepo.findByUserId(userId);
     if (!provider) throw new NotFoundError(ErrorMessages.PROVIDER_NOT_FOUND);
+    await this.applyContinuityBonusIfEligible(provider);
+    const updatedProvider = await this.providerRepo.findByUserId(userId);
     const txns = await this.paymentRepo.findWalletTxnsByProvider(provider.id);
-    return { provider, txns };
+    return { provider: updatedProvider ?? provider, txns };
   }
 
   async listApproved(offset: number, limit: number): Promise<ProviderModel[]> {
     return this.providerRepo.findApproved(offset, limit);
+  }
+
+  async updateDocuments(
+    userId: number,
+    data: { aadhaarUrl: string; passportPhotoUrl: string }
+  ): Promise<ProviderModel> {
+    const provider = await this.providerRepo.findByUserId(userId);
+    if (!provider) throw new NotFoundError(ErrorMessages.PROVIDER_NOT_FOUND);
+    const updated = await this.providerRepo.update(provider.id, data);
+    return updated!;
+  }
+
+  async updateIdentityVisibility(userId: number, identityHidden: boolean): Promise<ProviderModel> {
+    const provider = await this.providerRepo.findByUserId(userId);
+    if (!provider) throw new NotFoundError(ErrorMessages.PROVIDER_NOT_FOUND);
+    const updated = await this.providerRepo.update(provider.id, { identityHidden });
+    return updated!;
   }
 
   async getProviderReviews(providerId: number, offset: number, limit: number): Promise<{
@@ -157,5 +195,23 @@ export class ProviderService {
     ]);
 
     return { avgRating, reviews };
+  }
+
+  private async applyContinuityBonusIfEligible(provider: ProviderModel): Promise<void> {
+    if (!provider.serviceActiveSince || provider.continuityBonusPaidAt) return;
+    const fourYearsMs = 4 * 365 * 24 * 60 * 60 * 1000;
+    const isEligible = Date.now() - new Date(provider.serviceActiveSince).getTime() >= fourYearsMs;
+    if (!isEligible) return;
+
+    await this.providerRepo.incrementWallet(provider.id, 5000);
+    await this.paymentRepo.createWalletTxn({
+      providerId: provider.id,
+      amount: 5000,
+      type: 'credit',
+      note: '4-year continuity bonus',
+    });
+    await this.providerRepo.update(provider.id, {
+      continuityBonusPaidAt: new Date(),
+    });
   }
 }

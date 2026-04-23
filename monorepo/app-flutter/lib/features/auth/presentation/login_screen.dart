@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/loading_widget.dart';
+import '../../../shared/widgets/tagline_header.dart';
 import 'auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -96,6 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ],
                   ),
                 ),
+                const TaglineHeader(margin: EdgeInsets.only(top: 16, bottom: 0)),
                 const SizedBox(height: 40),
                 TextFormField(
                   controller: _phoneCtrl,
@@ -153,6 +155,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   ],
+                ),
+                TextButton(
+                  onPressed: () => context.push(AppConstants.routeAbout),
+                  child: const Text('About Us'),
                 ),
               ],
             ),

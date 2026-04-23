@@ -150,3 +150,27 @@ export const updateAccountSettings = async (
     next(err);
   }
 };
+
+export const generateProviderCode = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const provider = await getAdminService(req).generateProviderCode(parseInt(req.params.id));
+    res.status(StatusCodes.OK).json(provider);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getRewardAudit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const offset = parseInt(req.query.offset as string) || 0;
+    const limit = parseInt(req.query.limit as string) || 50;
+    const rows = await getAdminService(req).rewardAudit(offset, limit);
+    res.status(StatusCodes.OK).json(rows);
+  } catch (err) {
+    next(err);
+  }
+};

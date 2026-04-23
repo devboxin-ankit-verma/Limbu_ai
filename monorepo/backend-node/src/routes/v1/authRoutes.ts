@@ -25,6 +25,10 @@ router.post(
       .isIn(['provider', 'customer'])
       .withMessage('Role must be provider or customer'),
     body('email').optional().isEmail().withMessage('Enter a valid email'),
+    body('age').optional().isInt({ min: 18, max: 100 }).withMessage('Age must be between 18 and 100'),
+    body('gender').optional().isIn(['male', 'female', 'other']).withMessage('Invalid gender'),
+    // Documents are uploaded separately via POST /providers/documents after registration
+    body('providerCode').optional().trim().isLength({ min: 4 }).withMessage('Invalid provider code'),
   ],
   register
 );

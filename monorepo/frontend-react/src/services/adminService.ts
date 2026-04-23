@@ -42,6 +42,11 @@ export async function rejectProvider(id: number): Promise<Provider> {
   return res.data;
 }
 
+export async function generateProviderCode(id: number): Promise<Provider> {
+  const res = await apiClient.post(`/admin/providers/${id}/generate-code`);
+  return res.data;
+}
+
 export async function fetchUsers(
   offset = 0,
   limit = 50,
@@ -74,6 +79,11 @@ export async function fetchBookings(offset = 0, limit = 50): Promise<Booking[]> 
 
 export async function fetchPayments(offset = 0, limit = 50): Promise<Payment[]> {
   const res = await apiClient.get('/admin/payments', { params: { offset, limit } });
+  return res.data;
+}
+
+export async function fetchRewardAudit(offset = 0, limit = 50): Promise<Payment[]> {
+  const res = await apiClient.get('/admin/rewards/audit', { params: { offset, limit } });
   return res.data;
 }
 

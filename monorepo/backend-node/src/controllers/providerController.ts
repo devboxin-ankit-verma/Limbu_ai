@@ -129,6 +129,54 @@ export const completeMyBooking = async (req: Request, res: Response, next: NextF
   }
 };
 
+export const uploadProviderDocuments = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const files = (req.files as Record<string, Express.Multer.File[]>) || {};
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+
+    const aadhaarFile = files['aadhaar']?.[0];
+    const passportFile = files['passportPhoto']?.[0];
+
+    if (!aadhaarFile || !passportFile) {
+      res.status(400).json({ message: 'Both aadhaar and passportPhoto files are required' });
+      return;
+    }
+
+    const aadhaarUrl = `${baseUrl}/uploads/documents/${aadhaarFile.filename}`;
+    const passportPhotoUrl = `${baseUrl}/uploads/documents/${passportFile.filename}`;
+
+    const provider = await getProviderService(req).updateDocuments(
+      req.user!.userId,
+      { aadhaarUrl, passportPhotoUrl }
+    );
+
+    res.status(StatusCodes.OK).json({ aadhaarUrl, passportPhotoUrl, provider });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateIdentityVisibility = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const identityHidden = Boolean(req.body.identityHidden);
+    const provider = await getProviderService(req).updateIdentityVisibility(
+      req.user!.userId,
+      identityHidden
+    );
+    res.status(StatusCodes.OK).json(provider);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getProviderReviews = async (
   req: Request,
   res: Response,

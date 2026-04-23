@@ -44,6 +44,7 @@ class ProviderModel {
   final String? registrationFeePaidAt;
   final String? userName;
   final String? userPhone;
+  final bool hideIdentity;
   final List<ServiceModel> services;
 
   const ProviderModel({
@@ -57,6 +58,7 @@ class ProviderModel {
     this.registrationFeePaidAt,
     this.userName,
     this.userPhone,
+    this.hideIdentity = false,
     required this.services,
   });
 
@@ -77,6 +79,7 @@ class ProviderModel {
       registrationFeePaidAt: json['registrationFeePaidAt'] as String?,
       userName: user?['name'] as String?,
       userPhone: user?['phone'] as String?,
+      hideIdentity: user?['hideIdentity'] as bool? ?? false,
       services: servicesList,
     );
   }
@@ -94,6 +97,7 @@ class ProviderModel {
             : null,
         userName: userName,
         userPhone: userPhone,
+        hideIdentity: hideIdentity,
         services: services.map((s) => s.toEntity()).toList(),
       );
 }

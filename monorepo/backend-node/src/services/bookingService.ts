@@ -129,10 +129,16 @@ export class BookingService {
     if (booking.providerId !== provider.id) throw new ValidationError('Booking does not belong to you');
     if (booking.status !== 'confirmed') throw new ValidationError('Only confirmed bookings can be marked as completed');
 
+    const existingWalletCredit = await this.paymentRepo.findWalletTxnByBooking(bookingId);
+    if (existingWalletCredit) {
+      throw new ValidationError('Wallet amount already credited for this booking');
+    }
+
     await this.bookingRepo.updateStatus(bookingId, 'completed');
     await this.providerRepo.incrementWallet(provider.id, Number(booking.amount));
     await this.paymentRepo.createWalletTxn({
       providerId: provider.id,
+      bookingId,
       amount: Number(booking.amount),
       type: 'credit',
       note: `Service completed — booking #${bookingId}`,

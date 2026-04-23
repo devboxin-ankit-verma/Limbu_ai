@@ -12,6 +12,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { routes } from './routes';
 import { registerRepositories } from './dependencies/register';
 import sequelize from './database/connection';
+import { runMigrations } from './database/migrate';
 
 const app: Express = express();
 
@@ -46,10 +47,13 @@ async function bootstrap(): Promise<void> {
   await sequelize.authenticate();
   console.log('Database connection established.');
 
-  // Avoid `alter` in MySQL dev to prevent repeated index creation (ER_TOO_MANY_KEYS).
-  // Prefer explicit migrations for schema changes.
+  // Create any brand-new tables (new models). Does NOT alter existing tables.
   await sequelize.sync({ alter: false });
   console.log('Database tables synced.');
+
+  // Add missing columns to existing tables without touching indexes or dropping data.
+  await runMigrations(sequelize);
+
 
   app.listen(config.port, () => {
     console.log(`[${config.appName}] Server running on port ${config.port} (${config.nodeEnv})`);

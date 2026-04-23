@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/loading_widget.dart';
+import '../../../shared/widgets/tagline_header.dart';
 import '../../auth/presentation/auth_provider.dart';
 import '../../customer/domain/booking_entity.dart';
 import '../domain/provider_entity.dart';
@@ -39,8 +40,12 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dai Massage'),
+        title: const Text(AppConstants.appName),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => context.push(AppConstants.routeAbout),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
@@ -97,6 +102,7 @@ class _DashboardTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const TaglineHeader(margin: EdgeInsets.only(bottom: 12)),
           // Status banner
           _StatusBanner(status: provider.status, hasFeePaid: provider.hasFeePaid),
           const SizedBox(height: 16),

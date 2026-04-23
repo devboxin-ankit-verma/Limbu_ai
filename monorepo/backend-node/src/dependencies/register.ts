@@ -28,8 +28,8 @@ export function registerRepositories(app: Express): void {
   const accountSettingRepo = new AccountSettingRepository();
   const reviewRepo = new ReviewRepository();
 
-  app.set('authService', new AuthService(userRepo, providerRepo));
-  app.set('providerService', new ProviderService(providerRepo, serviceRepo, paymentRepo, reviewRepo));
+  app.set('authService', new AuthService(userRepo, providerRepo, paymentRepo));
+  app.set('providerService', new ProviderService(providerRepo, serviceRepo, paymentRepo, reviewRepo, accountSettingRepo));
   app.set(
     'adminService',
     new AdminService(providerRepo, userRepo, bookingRepo, paymentRepo, accountSettingRepo)

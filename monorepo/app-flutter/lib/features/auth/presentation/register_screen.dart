@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/loading_widget.dart';
+import '../../../shared/widgets/tagline_header.dart';
 import 'auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -21,47 +22,71 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _nameCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
+  final _ageCtrl = TextEditingController();
+  final _providerCodeCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _confirmPasswordCtrl = TextEditingController();
+
   String _gender = 'male';
   bool _obscurePassword = true;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
     _nameCtrl.dispose();
     _phoneCtrl.dispose();
     _emailCtrl.dispose();
+    _ageCtrl.dispose();
+    _providerCodeCtrl.dispose();
     _passwordCtrl.dispose();
     _confirmPasswordCtrl.dispose();
     super.dispose();
   }
 
+  bool get _isProvider => widget.role == 'provider';
+
   Future<void> _onRegister() async {
     if (!_formKey.currentState!.validate()) return;
-    await ref.read(authProvider.notifier).register(
-          name: _nameCtrl.text.trim(),
-          phone: _phoneCtrl.text.trim(),
-          email: _emailCtrl.text.trim().isEmpty ? null : _emailCtrl.text.trim(),
-          password: _passwordCtrl.text,
-          role: widget.role,
-          gender: _gender,
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      final registered = await ref.read(authProvider.notifier).register(
+            name: _nameCtrl.text.trim(),
+            phone: _phoneCtrl.text.trim(),
+            email: _emailCtrl.text.trim().isEmpty ? null : _emailCtrl.text.trim(),
+            password: _passwordCtrl.text,
+            role: widget.role,
+            age: int.tryParse(_ageCtrl.text.trim()),
+            gender: _gender,
+            providerCode: _providerCodeCtrl.text.trim().isEmpty
+                ? null
+                : _providerCodeCtrl.text.trim().toUpperCase(),
+          );
+
+      if (!registered || !mounted) return;
+
+      if (_isProvider) {
+        context.go(AppConstants.routeProviderSetup);
+      } else {
+        context.go(AppConstants.routeCustomerHome);
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Something went wrong. Please try again.')),
         );
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
-    final isProvider = widget.role == 'provider';
 
     ref.listen<AuthState>(authProvider, (_, next) {
-      if (next.isAuthenticated) {
-        if (isProvider) {
-          context.go(AppConstants.routeProviderSetup);
-        } else {
-          context.go(AppConstants.routeCustomerHome);
-        }
-      }
       if (next.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -74,7 +99,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isProvider ? 'Register as Provider' : 'Create Account'),
+        title: Text(_isProvider ? 'Register as Provider' : 'Create Account'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -84,7 +109,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (isProvider) ...[
+                const TaglineHeader(margin: EdgeInsets.only(bottom: 16)),
+
+                if (_isProvider) ...[
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -97,7 +124,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'A one-time registration fee will be charged after setup.',
+                            'A one-time registration fee will be charged after setup. You will upload your documents in the next step.',
                             style: theme.textTheme.bodySmall
                                 ?.copyWith(color: theme.colorScheme.primary),
                           ),
@@ -107,6 +134,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   const SizedBox(height: 20),
                 ],
+
+                // Full Name
                 TextFormField(
                   controller: _nameCtrl,
                   textCapitalization: TextCapitalization.words,
@@ -119,6 +148,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       v == null || v.trim().isEmpty ? 'Name is required' : null,
                 ),
                 const SizedBox(height: 16),
+
+                // Mobile Number
                 TextFormField(
                   controller: _phoneCtrl,
                   keyboardType: TextInputType.phone,
@@ -129,7 +160,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     hintText: '9XXXXXXXXX',
                   ),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Mobile number is required';
+                    if (v == null || v.trim().isEmpty) {
+                      return 'Mobile number is required';
+                    }
                     if (!RegExp(r'^[6-9]\d{9}$').hasMatch(v.trim())) {
                       return 'Enter a valid 10-digit Indian mobile number';
                     }
@@ -137,6 +170,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
+
+                // Email
                 TextFormField(
                   controller: _emailCtrl,
                   keyboardType: TextInputType.emailAddress,
@@ -155,7 +190,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                // Gender selector
+
+                // Age
+                TextFormField(
+                  controller: _ageCtrl,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    labelText: 'Age',
+                    prefixIcon: Icon(Icons.calendar_month_outlined),
+                  ),
+                  validator: (v) {
+                    final age = int.tryParse(v?.trim() ?? '');
+                    if (age == null) return 'Age is required';
+                    if (age < 18 || age > 100) return 'Age must be between 18 and 100';
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Gender
                 DropdownButtonFormField<String>(
                   value: _gender,
                   decoration: const InputDecoration(
@@ -170,6 +224,29 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   onChanged: (v) => setState(() => _gender = v!),
                 ),
                 const SizedBox(height: 16),
+
+                // Customer-only: Provider Code
+                if (!_isProvider) ...[
+                  TextFormField(
+                    controller: _providerCodeCtrl,
+                    textCapitalization: TextCapitalization.characters,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      labelText: 'Service Provider Code',
+                      hintText: 'DDMXXXXXX',
+                      prefixIcon: Icon(Icons.confirmation_number_outlined),
+                    ),
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty) {
+                        return 'Service Provider Code is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
+
+                // Password
                 TextFormField(
                   controller: _passwordCtrl,
                   obscureText: _obscurePassword,
@@ -191,6 +268,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
+
+                // Confirm Password
                 TextFormField(
                   controller: _confirmPasswordCtrl,
                   obscureText: true,
@@ -206,7 +285,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 32),
-                if (authState.isLoading)
+
+                if (_isSubmitting)
                   const LoadingWidget()
                 else
                   ElevatedButton(
@@ -214,6 +294,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     child: const Text('Create Account'),
                   ),
                 const SizedBox(height: 16),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

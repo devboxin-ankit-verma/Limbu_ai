@@ -6,7 +6,7 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 import { authenticate } from '../../middleware/authMiddleware';
 import { requireProvider } from '../../middleware/adminMiddleware';
-import { providerPhotoUpload } from '../../middleware/uploadMiddleware';
+import { providerPhotoUpload, providerDocumentUpload } from '../../middleware/uploadMiddleware';
 import {
   getMyProfile,
   getProviderById,
@@ -18,6 +18,8 @@ import {
   uploadProviderPhotos,
   getMyBookings,
   completeMyBooking,
+  uploadProviderDocuments,
+  updateIdentityVisibility,
 } from '../../controllers/providerController';
 
 const router = Router();
@@ -69,6 +71,27 @@ router.post(
   requireProvider,
   providerPhotoUpload.array('photos', 10),
   uploadProviderPhotos
+);
+
+// Document uploads — aadhaar and passport photo (never blurred)
+router.post(
+  '/providers/documents',
+  authenticate,
+  requireProvider,
+  providerDocumentUpload.fields([
+    { name: 'aadhaar', maxCount: 1 },
+    { name: 'passportPhoto', maxCount: 1 },
+  ]),
+  uploadProviderDocuments
+);
+
+// Toggle profile image blur (identityHidden). Aadhaar is always fully visible.
+router.patch(
+  '/providers/me/identity',
+  authenticate,
+  requireProvider,
+  [body('identityHidden').isBoolean().withMessage('identityHidden must be a boolean')],
+  updateIdentityVisibility
 );
 
 router.get('/providers/me/wallet', authenticate, requireProvider, getWalletHistory);

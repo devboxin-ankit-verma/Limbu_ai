@@ -3,7 +3,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { fetchProviders, approveProvider, rejectProvider } from '../services/adminService';
+import { fetchProviders, approveProvider, rejectProvider, generateProviderCode } from '../services/adminService';
 import type { Provider } from '../types';
 
 type StatusFilter = 'pending' | 'approved' | 'rejected';
@@ -52,6 +52,13 @@ export default function ProvidersPage() {
     load();
   };
 
+  const handleGenerateCode = async (id: number) => {
+    setActionLoading(id);
+    await generateProviderCode(id).catch(console.error);
+    setActionLoading(null);
+    load();
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm p-4">
       <h2 className="text-xl font-bold text-gray-800 mb-6">Providers</h2>
@@ -96,6 +103,7 @@ export default function ProvidersPage() {
                 <th className="px-4 py-3 text-left text-gray-600 font-medium">Completed Services</th>
                 <th className="px-4 py-3 text-left text-gray-600 font-medium">Wallet Amount</th>
                 <th className="px-4 py-3 text-left text-gray-600 font-medium">Fee Paid</th>
+                <th className="px-4 py-3 text-left text-gray-600 font-medium">Provider Code</th>
                 <th className="px-4 py-3 text-left text-gray-600 font-medium">Actions</th>
               </tr>
             </thead>
@@ -129,9 +137,20 @@ export default function ProvidersPage() {
                       <span className="text-gray-400">Not paid</span>
                     )}
                   </td>
+                  <td className="px-4 py-3 text-gray-700 font-mono">
+                    {p.providerCode ?? '—'}
+                  </td>
                   <td className="px-4 py-3">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleGenerateCode(p.id)}
+                        disabled={actionLoading === p.id}
+                        className="bg-blue-500 text-white text-xs px-3 py-1 rounded hover:bg-blue-600 disabled:opacity-50 transition-colors"
+                      >
+                        Code
+                      </button>
                     {p.status === 'pending' && (
-                      <div className="flex gap-2">
+                      <>
                         <button
                           onClick={() => handleApprove(p.id)}
                           disabled={actionLoading === p.id}
@@ -146,8 +165,9 @@ export default function ProvidersPage() {
                         >
                           Reject
                         </button>
-                      </div>
+                      </>
                     )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -166,15 +186,107 @@ export default function ProvidersPage() {
             className="bg-white rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold">{selected.user?.name}</h3>
-              <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600 text-xl">×</button>
+            {/* Provider header with avatar / first photo */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-3">
+                {selected.photos && selected.photos.length > 0 ? (
+                  <img
+                    src={selected.photos[0]}
+                    alt="Profile"
+                    className={`w-16 h-16 rounded-full object-cover border-2 border-orange-200 ${selected.identityHidden ? 'blur-sm' : ''}`}
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center text-2xl font-bold text-orange-600 shrink-0">
+                    {selected.user?.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800">{selected.user?.name}</h3>
+                  <p className="text-xs text-gray-500">{selected.user?.phone}</p>
+                  {selected.identityHidden && (
+                    <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">Identity hidden from customers</span>
+                  )}
+                </div>
+              </div>
+              <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
             </div>
+
+            {/* All profile photos grid */}
+            {selected.photos && selected.photos.length > 1 && (
+              <div className="mb-4">
+                <p className="text-xs font-medium text-gray-500 mb-2">Profile Photos</p>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {selected.photos.map((url, i) => (
+                    <img
+                      key={i}
+                      src={url}
+                      alt={`Photo ${i + 1}`}
+                      className={`w-full aspect-square object-cover rounded-lg ${selected.identityHidden ? 'blur-sm' : ''}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Verification documents — always fully visible, never blurred */}
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div>
+                <p className="text-xs text-gray-500 font-medium mb-1 flex items-center gap-1">
+                  <span>📄</span> Aadhaar Card
+                  <span className="text-green-600 font-semibold">(Always Visible)</span>
+                </p>
+                {selected.aadhaarUrl ? (
+                  <a href={selected.aadhaarUrl} target="_blank" rel="noreferrer">
+                    <img
+                      src={selected.aadhaarUrl}
+                      alt="Aadhaar"
+                      className="w-full h-28 object-cover rounded-lg border border-gray-200 hover:opacity-90 transition-opacity"
+                    />
+                  </a>
+                ) : (
+                  <div className="w-full h-28 bg-gray-100 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">
+                    Not uploaded
+                  </div>
+                )}
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 font-medium mb-1 flex items-center gap-1">
+                  <span>🪪</span> Passport Photo
+                  {selected.identityHidden && (
+                    <span className="text-orange-500 font-semibold">(Hidden from customers)</span>
+                  )}
+                </p>
+                {selected.passportPhotoUrl ? (
+                  <div className="relative">
+                    {/* Admin always sees the real photo; blur is only on customer-facing UI */}
+                    <img
+                      src={selected.passportPhotoUrl}
+                      alt="Passport Photo"
+                      className="w-full h-28 object-cover rounded-lg border border-gray-200"
+                    />
+                    {selected.identityHidden && (
+                      <div className="absolute inset-0 rounded-lg flex items-center justify-center bg-orange-500/10 border border-orange-300">
+                        <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-1 rounded-full font-medium">
+                          Blurred for customers
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="w-full h-28 bg-gray-100 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">
+                    Not uploaded
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div className="space-y-3 text-sm">
               <div><span className="text-gray-500">Phone:</span> {selected.user?.phone}</div>
               <div><span className="text-gray-500">Email:</span> {selected.user?.email ?? '—'}</div>
               <div><span className="text-gray-500">Status:</span> <StatusBadge status={selected.status} /></div>
               <div><span className="text-gray-500">Wallet:</span> ₹{Number(selected.walletBalance).toFixed(2)}</div>
+              <div><span className="text-gray-500">Provider Code:</span> {selected.providerCode ?? '—'}</div>
+              <div><span className="text-gray-500">Referral Count:</span> {selected.referredUsersCount ?? 0}</div>
               {selected.bio && (
                 <div>
                   <span className="text-gray-500">Bio:</span>

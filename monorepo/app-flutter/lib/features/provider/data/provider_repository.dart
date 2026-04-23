@@ -1,6 +1,4 @@
 /// Provider repository — API calls for provider endpoints.
-import 'dart:io';
-
 import '../../../core/constants/api_constants.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/utils/logger.dart';
@@ -91,6 +89,52 @@ class ProviderRepository {
       );
     } catch (e, st) {
       _log.error('completeRegistrationWithManualMethod failed', e, st);
+      rethrow;
+    }
+  }
+
+  /// Uploads Aadhaar card and passport-size photograph.
+  /// Returns a map with keys [aadhaarUrl] and [passportPhotoUrl].
+  /// These are verification documents and are NEVER blurred.
+  Future<Map<String, String>> uploadProviderDocuments({
+    required XFile aadhaarFile,
+    required XFile passportPhotoFile,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'aadhaar': await MultipartFile.fromFile(
+          aadhaarFile.path,
+          filename: aadhaarFile.name,
+        ),
+        'passportPhoto': await MultipartFile.fromFile(
+          passportPhotoFile.path,
+          filename: passportPhotoFile.name,
+        ),
+      });
+      final res = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.providerDocuments,
+        data: formData,
+      );
+      return {
+        'aadhaarUrl': res.data?['aadhaarUrl'] as String? ?? '',
+        'passportPhotoUrl': res.data?['passportPhotoUrl'] as String? ?? '',
+      };
+    } catch (e, st) {
+      _log.error('uploadProviderDocuments failed', e, st);
+      rethrow;
+    }
+  }
+
+  /// Updates whether this provider's profile photo is blurred.
+  /// Only the profile photo is affected — Aadhaar and other documents remain visible.
+  Future<void> updateIdentityVisibility({required bool identityHidden}) async {
+    try {
+      await _apiClient.patch<Map<String, dynamic>>(
+        ApiConstants.providerMeIdentity,
+        data: {'identityHidden': identityHidden},
+      );
+    } catch (e, st) {
+      _log.error('updateIdentityVisibility failed', e, st);
       rethrow;
     }
   }

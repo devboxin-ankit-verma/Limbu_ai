@@ -24,6 +24,7 @@ class AuthRepository {
     required String role,
     int? age,
     String? gender,
+    String? providerCode,
   }) async {
     try {
       final response = await _apiClient.post<Map<String, dynamic>>(
@@ -36,6 +37,7 @@ class AuthRepository {
           'role': role,
           if (age != null) 'age': age,
           if (gender != null) 'gender': gender,
+          if (providerCode != null && providerCode.isNotEmpty) 'providerCode': providerCode,
         },
       );
       final entity = AuthModel.fromJson(response.data!).toEntity();

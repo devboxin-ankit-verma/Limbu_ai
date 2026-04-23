@@ -11,6 +11,7 @@ export default function AccountSettingsPage() {
     razorpayKeySecret: '',
     upiId: '',
     codEnabled: false,
+    registrationFee: 999,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -24,6 +25,7 @@ export default function AccountSettingsPage() {
           razorpayKeySecret: res.razorpayKeySecret ?? '',
           upiId: res.upiId ?? '',
           codEnabled: !!res.codEnabled,
+          registrationFee: res.registrationFee ?? 999,
         });
       })
       .finally(() => setLoading(false));
@@ -38,6 +40,7 @@ export default function AccountSettingsPage() {
         razorpayKeySecret: form.razorpayKeySecret || null,
         upiId: form.upiId || null,
         codEnabled: form.codEnabled,
+        registrationFee: Number(form.registrationFee) || 999,
       });
       setMessage('Settings saved successfully.');
     } finally {
@@ -73,7 +76,7 @@ export default function AccountSettingsPage() {
           />
         </label>
 
-        <label className="text-sm md:col-span-2">
+        <label className="text-sm">
           <span className="block text-gray-600 mb-1">UPI ID</span>
           <input
             value={form.upiId}
@@ -81,6 +84,21 @@ export default function AccountSettingsPage() {
             className="w-full border rounded-lg px-3 py-2"
             placeholder="yourname@upi"
           />
+        </label>
+
+        <label className="text-sm">
+          <span className="block text-gray-600 mb-1">Registration Fee (₹)</span>
+          <input
+            type="number"
+            min={0}
+            value={form.registrationFee}
+            onChange={(e) => setForm((f) => ({ ...f, registrationFee: Number(e.target.value) }))}
+            className="w-full border rounded-lg px-3 py-2"
+            placeholder="999"
+          />
+          <span className="text-xs text-gray-400 mt-1 block">
+            One-time fee charged to massage providers on registration.
+          </span>
         </label>
       </div>
 

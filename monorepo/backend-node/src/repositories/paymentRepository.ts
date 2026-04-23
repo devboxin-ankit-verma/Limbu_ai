@@ -4,6 +4,7 @@
 
 import { PaymentModel, PaymentCreationAttributes, PaymentAttributes } from '../models/PaymentModel';
 import { WalletTxnModel, WalletTxnCreationAttributes } from '../models/WalletTxnModel';
+import { UserModel } from '../models/UserModel';
 
 export class PaymentRepository {
   async findById(id: number): Promise<PaymentModel | null> {
@@ -19,6 +20,14 @@ export class PaymentRepository {
       offset,
       limit,
       order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: UserModel,
+          as: 'user',
+          attributes: ['id', 'name', 'phone'],
+          required: false,
+        },
+      ],
     });
   }
 
@@ -47,6 +56,10 @@ export class PaymentRepository {
       limit,
       order: [['createdAt', 'DESC']],
     });
+  }
+
+  async findWalletTxnByBooking(bookingId: number): Promise<WalletTxnModel | null> {
+    return WalletTxnModel.findOne({ where: { bookingId, type: 'credit' } });
   }
 
   async totalRevenue(): Promise<number> {

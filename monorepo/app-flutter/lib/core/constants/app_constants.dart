@@ -13,14 +13,15 @@ abstract class AppConstants {
   static const String envFileName = '.env';
 
   // App metadata
-  static const String appName = 'Dai Massage';
-  static const String appTagline = 'वैदिक मालिश की परंपरा';
+  static const String appName = 'Desi Dai Massage';
+  static const String appTagline = 'पीढ़ी दर पीढ़ी अटूट विश्वास की परंपरा।';
 
   // Route paths
   static const String routeSplash = '/';
   static const String routeOnboarding = '/onboarding';
   static const String routeLogin = '/login';
   static const String routeRegister = '/register';
+  static const String routeAbout = '/about';
 
   // Provider routes
   static const String routeProviderSetup = '/provider/setup';

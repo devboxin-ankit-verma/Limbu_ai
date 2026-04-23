@@ -37,6 +37,16 @@ export class ProviderRepository {
     });
   }
 
+  async findByProviderCode(providerCode: string): Promise<ProviderModel | null> {
+    return ProviderModel.findOne({
+      where: { providerCode },
+      include: [
+        { model: UserModel, as: 'user', attributes: ['id', 'name', 'phone', 'email'] },
+        { model: MassageServiceModel, as: 'services' },
+      ],
+    });
+  }
+
   async findApproved(offset: number = 0, limit: number = 20): Promise<ProviderModel[]> {
     return ProviderModel.findAll({
       where: { status: 'approved' },

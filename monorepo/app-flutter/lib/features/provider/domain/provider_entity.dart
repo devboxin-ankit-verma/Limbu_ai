@@ -26,6 +26,7 @@ class ProviderEntity {
   final DateTime? registrationFeePaidAt;
   final String? userName;
   final String? userPhone;
+  final bool hideIdentity;
   final List<ServiceEntity> services;
 
   const ProviderEntity({
@@ -39,6 +40,7 @@ class ProviderEntity {
     this.registrationFeePaidAt,
     this.userName,
     this.userPhone,
+    this.hideIdentity = false,
     required this.services,
   });
 

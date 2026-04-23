@@ -61,7 +61,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } catch (_) {}
   }
 
-  Future<void> register({
+  Future<bool> register({
     required String name,
     required String phone,
     String? email,
@@ -69,6 +69,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String role,
     int? age,
     String? gender,
+    String? providerCode,
   }) async {
     state = state.withLoading();
     try {
@@ -80,10 +81,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
         role: role,
         age: age,
         gender: gender,
+        providerCode: providerCode,
       );
       state = AuthState(entity: entity);
+      return true;
     } catch (e) {
       state = state.withError(_parseError(e));
+      return false;
     }
   }
 

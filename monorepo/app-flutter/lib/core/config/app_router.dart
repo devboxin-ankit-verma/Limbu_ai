@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
+import '../../features/about/presentation/about_screen.dart';
 import '../../features/customer/presentation/customer_home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/provider/presentation/provider_home_screen.dart';
@@ -30,6 +31,10 @@ final appRouter = GoRouter(
         final role = extra?['role'] as String? ?? 'customer';
         return RegisterScreen(role: role);
       },
+    ),
+    GoRoute(
+      path: AppConstants.routeAbout,
+      builder: (_, __) => const AboutScreen(),
     ),
     // Provider routes
     GoRoute(

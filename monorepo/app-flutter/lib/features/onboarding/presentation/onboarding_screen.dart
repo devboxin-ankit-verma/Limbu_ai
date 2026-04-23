@@ -49,7 +49,7 @@ class OnboardingScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'सदियों पुरानी वैदिक मालिश की परंपरा\nआज के भारत में',
+                      'विश्वास, परंपरा और सम्मान के साथ\nहर घर तक देखभाल',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: Colors.grey[600],
                         height: 1.5,

@@ -53,7 +53,7 @@ export class PaymentService {
     if (paymentRecord.type === 'registration') {
       await this.handleRegistrationPayment(paymentRecord.userId);
     } else if (paymentRecord.type === 'service' && paymentRecord.referenceId) {
-      await this.handleServicePayment(paymentRecord.referenceId, paymentRecord.amount);
+      await this.handleServicePayment(paymentRecord.referenceId);
     }
   }
 
@@ -65,18 +65,10 @@ export class PaymentService {
     });
   }
 
-  private async handleServicePayment(bookingId: number, amount: number): Promise<void> {
+  private async handleServicePayment(bookingId: number): Promise<void> {
     const booking = await this.bookingRepo.findById(bookingId);
     if (!booking) return;
 
     await this.bookingRepo.updateStatus(bookingId, 'confirmed');
-    await this.providerRepo.incrementWallet(booking.providerId, amount);
-    await this.paymentRepo.createWalletTxn({
-      providerId: booking.providerId,
-      bookingId,
-      amount,
-      type: 'credit',
-      note: `Booking #${bookingId} confirmed`,
-    });
   }
 }

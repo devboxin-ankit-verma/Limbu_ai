@@ -1,5 +1,6 @@
 /// Customer home — browse providers, book services, view booking history.
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/loading_widget.dart';
+import '../../../shared/widgets/tagline_header.dart';
 import '../../auth/presentation/auth_provider.dart';
 import '../../provider/domain/provider_entity.dart';
 import 'customer_provider.dart';
@@ -83,8 +85,12 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dai Massage'),
+        title: const Text(AppConstants.appName),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => context.push(AppConstants.routeAbout),
+          ),
           IconButton(
             icon: Icon(isAuthenticated ? Icons.logout : Icons.login),
             onPressed: () async {
@@ -175,11 +181,19 @@ class _BrowseTab extends ConsumerWidget {
       onRefresh: () => ref.read(customerStateProvider.notifier).loadProviders(),
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: providers.length,
-        itemBuilder: (_, i) => _ProviderCard(
-          provider: providers[i],
-          razorpay: razorpay,
-        ),
+        itemCount: providers.length + 1,
+        itemBuilder: (_, i) {
+          if (i == 0) {
+            return const TaglineHeader(
+              margin: EdgeInsets.only(bottom: 16),
+            );
+          }
+          final provider = providers[i - 1];
+          return _ProviderCard(
+            provider: provider,
+            razorpay: razorpay,
+          );
+        },
       ),
     );
   }
@@ -216,6 +230,16 @@ class _ProviderCard extends ConsumerWidget {
                   fit: StackFit.expand,
                   children: [
                     CachedNetworkImage(
+                      imageBuilder: (_, imageProvider) => ImageFiltered(
+                        imageFilter: provider.hideIdentity
+                            ? ImageFilter.blur(sigmaX: 8, sigmaY: 8)
+                            : ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                        child: Image(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        ),
+                      ),
                       imageUrl: provider.photos[i],
                       fit: BoxFit.cover,
                       alignment: Alignment.topCenter,

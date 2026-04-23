@@ -15,6 +15,15 @@ export interface Provider {
   user?: { id: number; name: string; phone: string; email: string | null };
   services?: Service[];
   completedServicesCount?: number;
+  providerCode?: string | null;
+  referredUsersCount?: number;
+  registrationRefundPaidAt?: string | null;
+  continuityBonusPaidAt?: string | null;
+  // Verification documents — always visible to admin, never blurred
+  aadhaarUrl?: string | null;
+  passportPhotoUrl?: string | null;
+  // When true, the profile photo is blurred for customers; documents are unaffected
+  identityHidden?: boolean;
 }
 
 export interface Service {
@@ -32,8 +41,25 @@ export interface User {
   phone: string;
   email: string | null;
   role: 'provider' | 'customer' | 'admin';
+  age?: number | null;
+  gender?: 'male' | 'female' | 'other' | null;
   deletedAt?: string | null;
   createdAt: string;
+  /** Populated only when user.role === 'provider' */
+  provider?: {
+    id: number;
+    bio: string | null;
+    photos: string[];
+    expertise: string[];
+    status: 'pending' | 'approved' | 'rejected';
+    walletBalance: number;
+    registrationFeePaidAt: string | null;
+    providerCode: string | null;
+    referredUsersCount: number;
+    aadhaarUrl: string | null;
+    passportPhotoUrl: string | null;
+    identityHidden: boolean;
+  } | null;
 }
 
 export interface Booking {
@@ -60,6 +86,7 @@ export interface Payment {
   amount: number;
   status: 'pending' | 'paid' | 'failed';
   createdAt: string;
+  user?: { id: number; name: string; phone: string };
 }
 
 export interface DashboardStats {
@@ -80,4 +107,5 @@ export interface AccountSettings {
   razorpayKeySecret: string | null;
   upiId: string | null;
   codEnabled: boolean;
+  registrationFee: number;
 }

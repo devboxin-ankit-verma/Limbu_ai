@@ -59,7 +59,13 @@ export class AdminService {
   async approveProvider(id: number): Promise<ProviderModel> {
     const provider = await this.providerRepo.findById(id);
     if (!provider) throw new NotFoundError(ErrorMessages.PROVIDER_NOT_FOUND);
-    const updated = await this.providerRepo.update(id, { status: 'approved' });
+    if (!provider.registrationFeePaidAt) {
+      throw new NotFoundError('Provider registration fee is not paid');
+    }
+    const updated = await this.providerRepo.update(id, {
+      status: 'approved',
+      serviceActiveSince: provider.serviceActiveSince ?? new Date(),
+    });
     return updated!;
   }
 
@@ -120,6 +126,26 @@ export class AdminService {
 
   async listPayments(offset: number, limit: number): Promise<unknown[]> {
     return this.paymentRepo.findAll(offset, limit);
+  }
+
+  async generateProviderCode(id: number): Promise<ProviderModel> {
+    const provider = await this.providerRepo.findById(id);
+    if (!provider) throw new NotFoundError(ErrorMessages.PROVIDER_NOT_FOUND);
+
+    let code = '';
+    let exists = true;
+    while (exists) {
+      code = `DDM${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+      exists = !!(await this.providerRepo.findByProviderCode(code));
+    }
+
+    const updated = await this.providerRepo.update(id, { providerCode: code });
+    return updated!;
+  }
+
+  async rewardAudit(offset: number, limit: number): Promise<unknown[]> {
+    const payments = await this.paymentRepo.findAll(offset, limit);
+    return payments.filter((p) => ['registration', 'service'].includes((p as { type?: string }).type ?? ''));
   }
 
   async getDashboardTrends(): Promise<{

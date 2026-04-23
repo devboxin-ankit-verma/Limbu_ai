@@ -10,6 +10,7 @@ export interface AccountSettingAttributes {
   razorpayKeySecret: string | null;
   upiId: string | null;
   codEnabled: boolean;
+  registrationFee: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -17,7 +18,7 @@ export interface AccountSettingAttributes {
 export interface AccountSettingCreationAttributes
   extends Optional<
     AccountSettingAttributes,
-    'id' | 'razorpayKeyId' | 'razorpayKeySecret' | 'upiId' | 'codEnabled' | 'createdAt' | 'updatedAt'
+    'id' | 'razorpayKeyId' | 'razorpayKeySecret' | 'upiId' | 'codEnabled' | 'registrationFee' | 'createdAt' | 'updatedAt'
   > {}
 
 export class AccountSettingModel
@@ -29,6 +30,7 @@ export class AccountSettingModel
   public razorpayKeySecret!: string | null;
   public upiId!: string | null;
   public codEnabled!: boolean;
+  public registrationFee!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -57,6 +59,11 @@ export function initAccountSettingModel(sequelize: Sequelize): typeof AccountSet
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+      },
+      registrationFee: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 999,
       },
     },
     {

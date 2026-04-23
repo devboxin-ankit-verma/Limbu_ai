@@ -6,6 +6,7 @@
  */
 
 import { UserModel, UserAttributes, UserCreationAttributes } from '../models/UserModel';
+import { ProviderModel } from '../models/ProviderModel';
 import { Op } from 'sequelize';
 
 export class UserRepository {
@@ -19,6 +20,18 @@ export class UserRepository {
 
   async findByEmail(email: string): Promise<UserModel | null> {
     return UserModel.findOne({ where: { email } });
+  }
+
+  /** Checks whether a phone exists, including soft-deleted rows. */
+  async phoneExists(phone: string): Promise<boolean> {
+    const count = await UserModel.count({ where: { phone }, paranoid: false });
+    return count > 0;
+  }
+
+  /** Checks whether an email exists, including soft-deleted rows. */
+  async emailExists(email: string): Promise<boolean> {
+    const count = await UserModel.count({ where: { email }, paranoid: false });
+    return count > 0;
   }
 
   async findAll(
@@ -47,6 +60,19 @@ export class UserRepository {
       limit,
       paranoid: !filters?.includeDeleted,
       order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: ProviderModel,
+          as: 'provider',
+          required: false,
+          attributes: [
+            'id', 'bio', 'photos', 'expertise', 'status', 'walletBalance',
+            'registrationFeePaidAt', 'providerCode', 'referredUsersCount',
+            'aadhaarUrl', 'passportPhotoUrl', 'identityHidden',
+            'createdAt', 'updatedAt',
+          ],
+        },
+      ],
     });
   }
 

@@ -13,6 +13,15 @@ export interface ProviderAttributes {
   status: 'pending' | 'approved' | 'rejected';
   walletBalance: number;
   registrationFeePaidAt: Date | null;
+  providerCode: string | null;
+  referredUsersCount: number;
+  registrationRefundPaidAt: Date | null;
+  serviceActiveSince: Date | null;
+  continuityBonusPaidAt: Date | null;
+  // Identity & verification documents
+  aadhaarUrl: string | null;
+  passportPhotoUrl: string | null;
+  identityHidden: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -20,7 +29,22 @@ export interface ProviderAttributes {
 export interface ProviderCreationAttributes
   extends Optional<
     ProviderAttributes,
-    'id' | 'bio' | 'photos' | 'expertise' | 'walletBalance' | 'registrationFeePaidAt' | 'createdAt' | 'updatedAt'
+    | 'id'
+    | 'bio'
+    | 'photos'
+    | 'expertise'
+    | 'walletBalance'
+    | 'registrationFeePaidAt'
+    | 'providerCode'
+    | 'referredUsersCount'
+    | 'registrationRefundPaidAt'
+    | 'serviceActiveSince'
+    | 'continuityBonusPaidAt'
+    | 'aadhaarUrl'
+    | 'passportPhotoUrl'
+    | 'identityHidden'
+    | 'createdAt'
+    | 'updatedAt'
   > {}
 
 export class ProviderModel
@@ -35,6 +59,14 @@ export class ProviderModel
   public status!: 'pending' | 'approved' | 'rejected';
   public walletBalance!: number;
   public registrationFeePaidAt!: Date | null;
+  public providerCode!: string | null;
+  public referredUsersCount!: number;
+  public registrationRefundPaidAt!: Date | null;
+  public serviceActiveSince!: Date | null;
+  public continuityBonusPaidAt!: Date | null;
+  public aadhaarUrl!: string | null;
+  public passportPhotoUrl!: string | null;
+  public identityHidden!: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -79,6 +111,41 @@ export function initProviderModel(sequelize: Sequelize): typeof ProviderModel {
       registrationFeePaidAt: {
         type: DataTypes.DATE,
         allowNull: true,
+      },
+      providerCode: {
+        type: DataTypes.STRING(40),
+        allowNull: true,
+        unique: true,
+      },
+      referredUsersCount: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      registrationRefundPaidAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      serviceActiveSince: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      continuityBonusPaidAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      aadhaarUrl: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
+      passportPhotoUrl: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
+      identityHidden: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {

@@ -10,6 +10,8 @@ abstract class ApiConstants {
   static const String providerPayRegistration = '/providers/pay-registration';
   static const String providerPayRegistrationManual = '/providers/pay-registration/manual';
   static const String providerPhotos = '/providers/photos';
+  static const String providerDocuments = '/providers/documents';
+  static const String providerMeIdentity = '/providers/me/identity';
   static const String providerMeProfile = '/providers/me/profile';
   static const String providerMeWallet = '/providers/me/wallet';
   static const String providerMeBookings = '/providers/me/bookings';
