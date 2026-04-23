@@ -17,13 +17,11 @@ interface RawAuthRow {
   email: string | null;
   password_hash: string;
   role: 'provider' | 'customer' | 'admin';
-  age: number | null;
-  gender: 'male' | 'female' | 'other' | null;
 }
 
 /**
  * Converts a raw SQL auth row into a UserModel-like object.
- * Uses only the core columns that have existed since day one.
+ * Uses only the 6 core columns that have existed since day one.
  */
 function rawToModel(row: RawAuthRow): UserModel {
   const m = UserModel.build({
@@ -33,9 +31,6 @@ function rawToModel(row: RawAuthRow): UserModel {
     email: row.email,
     passwordHash: row.password_hash,
     role: row.role,
-    age: row.age,
-    gender: row.gender,
-    referredByProviderId: null,
   });
   return m;
 }
@@ -46,31 +41,32 @@ export class UserRepository {
   }
 
   /**
-   * Raw SQL auth lookup — only reads the core columns that have always existed.
-   * Never fails due to missing optional columns (deleted_at, referred_by_provider_id).
-   * Skips soft-deleted users by checking deleted_at when available.
+   * Raw SQL auth lookup — reads only the 6 core columns (always present since v1).
+   * Tries with deleted_at IS NULL first; if the column doesn't exist yet, retries without it.
+   * Never queries INFORMATION_SCHEMA (avoids permission issues on some MySQL hosts).
    */
   private async findForAuth(field: 'phone' | 'email', value: string): Promise<UserModel | null> {
     const seq = UserModel.sequelize!;
-
-    // Step 1: check if deleted_at column exists (safe INFORMATION_SCHEMA query)
-    const [colCheck] = await seq.query(
-      `SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS
-       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'deleted_at'`,
-      { type: QueryTypes.SELECT }
-    ) as [{ cnt: number | string }];
-    const hasDeletedAt = Number(colCheck?.cnt ?? 0) > 0;
-
-    // Step 2: build the auth query — only reference deleted_at if it actually exists
-    const deletedAtClause = hasDeletedAt ? 'AND deleted_at IS NULL' : '';
-    const rows = await seq.query<RawAuthRow>(
-      `SELECT id, name, phone, email, password_hash, role, age, gender
+    const sql = (withSoftDelete: boolean) =>
+      `SELECT id, name, phone, email, password_hash, role
        FROM \`users\`
        WHERE \`${field}\` = :value
-       ${deletedAtClause}
-       LIMIT 1`,
-      { replacements: { value }, type: QueryTypes.SELECT }
-    );
+       ${withSoftDelete ? 'AND deleted_at IS NULL' : ''}
+       LIMIT 1`;
+
+    let rows: RawAuthRow[];
+    try {
+      rows = await seq.query<RawAuthRow>(
+        sql(true),
+        { replacements: { value }, type: QueryTypes.SELECT }
+      );
+    } catch {
+      // deleted_at column not yet added — fall back to query without it
+      rows = await seq.query<RawAuthRow>(
+        sql(false),
+        { replacements: { value }, type: QueryTypes.SELECT }
+      );
+    }
 
     if (!rows.length) return null;
     return rawToModel(rows[0]);
