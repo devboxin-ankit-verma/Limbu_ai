@@ -74,6 +74,16 @@ export async function runMigrations(seq: Sequelize): Promise<void> {
   await addIfMissing(seq, 'users', 'referred_by_provider_id', 'BIGINT UNSIGNED NULL');
   await addIfMissing(seq, 'users', 'deleted_at',              'DATETIME NULL');
 
+  // ── ensure role ENUM includes 'admin' (safe to run even if already correct) ─
+  try {
+    await seq.query(
+      `ALTER TABLE \`users\` MODIFY COLUMN \`role\` ENUM('provider','customer','admin') NOT NULL`
+    );
+    console.log('[migrate] ✓ role ENUM confirmed (provider/customer/admin)');
+  } catch (err) {
+    console.warn('[migrate] role ENUM modify skipped:', (err as Error).message);
+  }
+
   console.log('[migrate] Column migrations complete.');
 
   // ── Data fix: set correct amount on manual registration payments saved as ₹0 ──

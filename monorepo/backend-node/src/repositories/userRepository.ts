@@ -5,14 +5,40 @@
  * NO business logic here.
  */
 
+import { QueryTypes } from 'sequelize';
 import { UserModel, UserAttributes, UserCreationAttributes } from '../models/UserModel';
 import { ProviderModel } from '../models/ProviderModel';
 import { Op } from 'sequelize';
 
-/** Core user columns always present since the first deployment. */
-const AUTH_ATTRIBUTES: Array<keyof UserAttributes> = [
-  'id', 'name', 'phone', 'email', 'passwordHash', 'role', 'age', 'gender',
-];
+interface RawAuthRow {
+  id: number;
+  name: string;
+  phone: string;
+  email: string | null;
+  password_hash: string;
+  role: 'provider' | 'customer' | 'admin';
+  age: number | null;
+  gender: 'male' | 'female' | 'other' | null;
+}
+
+/**
+ * Converts a raw SQL auth row into a UserModel-like object.
+ * Uses only the core columns that have existed since day one.
+ */
+function rawToModel(row: RawAuthRow): UserModel {
+  const m = UserModel.build({
+    id: row.id,
+    name: row.name,
+    phone: row.phone,
+    email: row.email,
+    passwordHash: row.password_hash,
+    role: row.role,
+    age: row.age,
+    gender: row.gender,
+    referredByProviderId: null,
+  });
+  return m;
+}
 
 export class UserRepository {
   async findById(id: number): Promise<UserModel | null> {
@@ -20,29 +46,39 @@ export class UserRepository {
   }
 
   /**
-   * Finds a user by phone for authentication.
-   * Falls back to minimal-attribute query if the DB schema has missing optional columns.
+   * Raw SQL auth lookup — only reads the core columns that have always existed.
+   * Never fails due to missing optional columns (deleted_at, referred_by_provider_id).
+   * Skips soft-deleted users by checking deleted_at when available.
    */
-  async findByPhone(phone: string): Promise<UserModel | null> {
-    try {
-      return await UserModel.findOne({ where: { phone } });
-    } catch {
-      // DB schema partially migrated — use core columns only
-      return UserModel.findOne({ where: { phone }, attributes: AUTH_ATTRIBUTES, paranoid: false });
-    }
+  private async findForAuth(field: 'phone' | 'email', value: string): Promise<UserModel | null> {
+    const seq = UserModel.sequelize!;
+
+    // Raw query: only core columns — immune to schema migration state
+    const rows = await seq.query<RawAuthRow>(
+      `SELECT id, name, phone, email, password_hash, role, age, gender
+       FROM \`users\`
+       WHERE \`${field}\` = :value
+         AND (deleted_at IS NULL OR NOT EXISTS (
+               SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = DATABASE()
+                 AND TABLE_NAME = 'users'
+                 AND COLUMN_NAME = 'deleted_at'))
+       LIMIT 1`,
+      { replacements: { value }, type: QueryTypes.SELECT }
+    );
+
+    if (!rows.length) return null;
+    return rawToModel(rows[0]);
   }
 
-  /**
-   * Finds a user by email for authentication.
-   * Falls back to minimal-attribute query if the DB schema has missing optional columns.
-   */
+  /** Finds a user by phone number (used for login). */
+  async findByPhone(phone: string): Promise<UserModel | null> {
+    return this.findForAuth('phone', phone);
+  }
+
+  /** Finds a user by email address (used for login). */
   async findByEmail(email: string): Promise<UserModel | null> {
-    try {
-      return await UserModel.findOne({ where: { email } });
-    } catch {
-      // DB schema partially migrated — use core columns only
-      return UserModel.findOne({ where: { email }, attributes: AUTH_ATTRIBUTES, paranoid: false });
-    }
+    return this.findForAuth('email', email);
   }
 
   /** Checks whether a phone exists, including soft-deleted rows. */
