@@ -53,16 +53,21 @@ export class UserRepository {
   private async findForAuth(field: 'phone' | 'email', value: string): Promise<UserModel | null> {
     const seq = UserModel.sequelize!;
 
-    // Raw query: only core columns — immune to schema migration state
+    // Step 1: check if deleted_at column exists (safe INFORMATION_SCHEMA query)
+    const [colCheck] = await seq.query(
+      `SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'deleted_at'`,
+      { type: QueryTypes.SELECT }
+    ) as [{ cnt: number | string }];
+    const hasDeletedAt = Number(colCheck?.cnt ?? 0) > 0;
+
+    // Step 2: build the auth query — only reference deleted_at if it actually exists
+    const deletedAtClause = hasDeletedAt ? 'AND deleted_at IS NULL' : '';
     const rows = await seq.query<RawAuthRow>(
       `SELECT id, name, phone, email, password_hash, role, age, gender
        FROM \`users\`
        WHERE \`${field}\` = :value
-         AND (deleted_at IS NULL OR NOT EXISTS (
-               SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-               WHERE TABLE_SCHEMA = DATABASE()
-                 AND TABLE_NAME = 'users'
-                 AND COLUMN_NAME = 'deleted_at'))
+       ${deletedAtClause}
        LIMIT 1`,
       { replacements: { value }, type: QueryTypes.SELECT }
     );
