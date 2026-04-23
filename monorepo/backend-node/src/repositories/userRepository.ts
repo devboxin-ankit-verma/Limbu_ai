@@ -9,17 +9,40 @@ import { UserModel, UserAttributes, UserCreationAttributes } from '../models/Use
 import { ProviderModel } from '../models/ProviderModel';
 import { Op } from 'sequelize';
 
+/** Core user columns always present since the first deployment. */
+const AUTH_ATTRIBUTES: Array<keyof UserAttributes> = [
+  'id', 'name', 'phone', 'email', 'passwordHash', 'role', 'age', 'gender',
+];
+
 export class UserRepository {
   async findById(id: number): Promise<UserModel | null> {
     return UserModel.findByPk(id);
   }
 
+  /**
+   * Finds a user by phone for authentication.
+   * Falls back to minimal-attribute query if the DB schema has missing optional columns.
+   */
   async findByPhone(phone: string): Promise<UserModel | null> {
-    return UserModel.findOne({ where: { phone } });
+    try {
+      return await UserModel.findOne({ where: { phone } });
+    } catch {
+      // DB schema partially migrated — use core columns only
+      return UserModel.findOne({ where: { phone }, attributes: AUTH_ATTRIBUTES, paranoid: false });
+    }
   }
 
+  /**
+   * Finds a user by email for authentication.
+   * Falls back to minimal-attribute query if the DB schema has missing optional columns.
+   */
   async findByEmail(email: string): Promise<UserModel | null> {
-    return UserModel.findOne({ where: { email } });
+    try {
+      return await UserModel.findOne({ where: { email } });
+    } catch {
+      // DB schema partially migrated — use core columns only
+      return UserModel.findOne({ where: { email }, attributes: AUTH_ATTRIBUTES, paranoid: false });
+    }
   }
 
   /** Checks whether a phone exists, including soft-deleted rows. */
