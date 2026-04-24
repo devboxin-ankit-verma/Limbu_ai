@@ -70,7 +70,9 @@ export async function runMigrations(seq: Sequelize): Promise<void> {
   // ── account_settings ──────────────────────────────────────────────────────
   await addIfMissing(seq, 'account_settings', 'registration_fee', 'DECIMAL(10,2) NOT NULL DEFAULT 999');
 
-  // ── users (paranoid + referral) ───────────────────────────────────────────
+  // ── users (all columns that may be missing on older deployments) ──────────
+  await addIfMissing(seq, 'users', 'age',                    'INT UNSIGNED NULL');
+  await addIfMissing(seq, 'users', 'gender',                 "ENUM('male','female','other') NULL");
   await addIfMissing(seq, 'users', 'referred_by_provider_id', 'BIGINT UNSIGNED NULL');
   await addIfMissing(seq, 'users', 'deleted_at',              'DATETIME NULL');
 
