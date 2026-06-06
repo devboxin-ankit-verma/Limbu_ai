@@ -1,0 +1,27 @@
+{
+  "name": "@limbu/workflows",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./worker": "./src/queue/enqueue.ts"
+  },
+  "dependencies": {
+    "@limbu/agents": "*",
+    "@limbu/auth": "*",
+    "@limbu/billing": "*",
+    "@limbu/analytics": "*",
+    "@limbu/db": "*",
+    "@limbu/notifications": "*",
+    "@limbu/rag": "*",
+    "@limbu/workspace": "*",
+    "cron-parser": "^4.9.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.17",
+    "typescript": "^5.8.3"
+  }
+}

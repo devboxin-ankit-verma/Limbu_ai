@@ -1,0 +1,60 @@
+services:
+  postgres:
+    profiles: ["local"]
+    image: pgvector/pgvector:pg16
+    container_name: limbu-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: limbu
+      POSTGRES_PASSWORD: limbu
+      POSTGRES_DB: limbu
+    volumes:
+      - limbu_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U limbu -d limbu"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: limbu-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - limbu_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    container_name: limbu-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: limbu
+      MINIO_ROOT_PASSWORD: limbu_secret
+    command: server /data --console-address ":9001"
+    volumes:
+      - limbu_minio_data:/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: limbu-mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  limbu_postgres_data:
+  limbu_redis_data:
+  limbu_minio_data:

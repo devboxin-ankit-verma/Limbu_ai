@@ -1,0 +1,35 @@
+{
+  "name": "@limbu/api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3002",
+    "build": "next build",
+    "start": "next start --port 3002",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@limbu/admin": "*",
+    "@limbu/agents": "*",
+    "@limbu/ai-core": "*",
+    "@limbu/analytics": "*",
+    "@limbu/auth": "*",
+    "@limbu/billing": "*",
+    "@limbu/chat": "*",
+    "@limbu/db": "*",
+    "@limbu/notifications": "*",
+    "@limbu/org": "*",
+    "@limbu/rag": "*",
+    "@limbu/shared": "*",
+    "@limbu/worker": "*",
+    "@limbu/workflows": "*",
+    "@limbu/workspace": "*",
+    "next": "^15.3.3",
+    "next-auth": "^5.0.0-beta.28",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "typescript": "^5.8.3"
+  }
+}

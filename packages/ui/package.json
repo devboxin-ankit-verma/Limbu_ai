@@ -1,0 +1,44 @@
+{
+  "name": "@limbu/ui",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./auth": "./src/auth/index.ts",
+    "./auth/*": "./src/auth/*.tsx",
+    "./rbac": "./src/rbac/index.ts",
+    "./rbac/*": "./src/rbac/*.tsx",
+    "./notifications": "./src/notifications/index.ts",
+    "./notifications/*": "./src/notifications/*.tsx",
+    "./layout": "./src/layout/index.ts",
+    "./layout/admin/admin-shell": "./src/layout/admin/admin-shell.tsx",
+    "./layout/org/org-shell": "./src/layout/org/org-shell.tsx",
+    "./layout/org/org-nav": "./src/layout/org/org-nav.tsx",
+    "./layout/workspace/workspace-shell": "./src/layout/workspace/workspace-shell.tsx",
+    "./layout/workspace/workspace-nav": "./src/layout/workspace/workspace-nav.tsx",
+    "./layout/workspace/workspace-switcher": "./src/layout/workspace/workspace-switcher.tsx",
+    "./layout/workspace/workspace-switcher-loader": "./src/layout/workspace/workspace-switcher-loader.tsx",
+    "./styles/globals.css": "./src/styles/globals.css"
+  },
+  "dependencies": {
+    "@limbu/auth": "*",
+    "@limbu/org": "*",
+    "@limbu/shared": "*",
+    "@limbu/workspace": "*"
+  },
+  "peerDependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

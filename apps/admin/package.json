@@ -1,0 +1,31 @@
+{
+  "name": "@limbu/admin-app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3003",
+    "build": "next build",
+    "start": "next start --port 3003",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@limbu/admin": "*",
+    "@limbu/analytics": "*",
+    "@limbu/auth": "*",
+    "@limbu/billing": "*",
+    "@limbu/db": "*",
+    "@limbu/shared": "*",
+    "@limbu/ui": "*",
+    "next": "^15.3.3",
+    "next-auth": "^5.0.0-beta.28",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "limbu",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=@limbu/web",
+    "dev:worker": "npm run dev --workspace=@limbu/worker",
+    "dev:api": "npm run dev --workspace=@limbu/api",
+    "dev:admin": "npm run dev --workspace=@limbu/admin-app",
+    "build:web": "npm run build --workspace=@limbu/web",
+    "typecheck:admin": "npm run typecheck --workspace=@limbu/admin-app",
+    "typecheck:api": "npm run typecheck --workspace=@limbu/api",
+    "typecheck:worker": "npm run typecheck --workspace=@limbu/worker",
+    "typecheck:shared": "npm run typecheck --workspace=@limbu/shared",
+    "typecheck:ui": "npm run typecheck --workspace=@limbu/ui",
+    "db:setup": "npm run db:setup:neon --workspace=@limbu/db",
+    "db:setup:neon": "npm run db:setup:neon --workspace=@limbu/db",
+    "db:setup:local": "npm run db:setup:local --workspace=@limbu/db",
+    "db:generate": "npm run db:generate --workspace=@limbu/db"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

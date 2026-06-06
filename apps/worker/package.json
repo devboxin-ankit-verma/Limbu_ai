@@ -1,0 +1,30 @@
+{
+  "name": "@limbu/worker",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./jobs/workflows": "./src/jobs/workflows.ts",
+    "./jobs/rag-ingest": "./src/jobs/rag-ingest.ts",
+    "./jobs/notifications": "./src/jobs/notifications.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@limbu/db": "*",
+    "@limbu/notifications": "*",
+    "@limbu/rag": "*",
+    "@limbu/workflows": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

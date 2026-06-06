@@ -1,0 +1,42 @@
+{
+  "name": "@limbu/web",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@limbu/auth": "*",
+    "@limbu/db": "*",
+    "@limbu/org": "*",
+    "@limbu/workspace": "*",
+    "@limbu/chat": "*",
+    "@limbu/ai-core": "*",
+    "@limbu/rag": "*",
+    "@limbu/agents": "*",
+    "@limbu/workflows": "*",
+    "@limbu/billing": "*",
+    "@limbu/analytics": "*",
+    "@limbu/notifications": "*",
+    "@limbu/shared": "*",
+    "@limbu/ui": "*",
+    "@limbu/worker": "*",
+    "next": "^15.3.3",
+    "next-auth": "^5.0.0-beta.28",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "^5.8.3"
+  }
+}
