@@ -21,6 +21,8 @@ export const authConfig = {
   trustHost: true,
   callbacks: {
     authorized({ auth, request }) {
+      if (process.env.DEV_SKIP_AUTH === "true") return true;
+
       const { pathname } = request.nextUrl;
       const isLoggedIn = !!auth?.user;
 

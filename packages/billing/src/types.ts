@@ -11,6 +11,10 @@ export type PlanFeatures = {
   maxKnowledgeDocuments: number;
   maxAgentRunsPerMonth: number;
   maxWorkflowRunsPerMonth: number;
+  gmbPublishing: boolean;
+  reviewAutoReply: boolean;
+  magicQr: boolean;
+  maxLocations: number | null;
 };
 
 export type PlanDefinition = {

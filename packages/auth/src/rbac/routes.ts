@@ -13,6 +13,13 @@ export type RouteRule = {
  * First matching rule wins (most specific routes listed first).
  */
 export const ROUTE_RULES: RouteRule[] = [
+  { pattern: /^\/posts(?:\/|$)/, permission: "content:view", scope: "session" },
+  { pattern: /^\/calendar(?:\/|$)/, permission: "content:view", scope: "session" },
+  { pattern: /^\/reviews(?:\/|$)/, permission: "content:view", scope: "session" },
+  { pattern: /^\/locations(?:\/|$)/, permission: "content:view", scope: "session" },
+  { pattern: /^\/integrations(?:\/|$)/, permission: "content:edit", scope: "session" },
+  { pattern: /^\/magic-qr(?:\/|$)/, permission: "content:view", scope: "session" },
+  { pattern: /^\/analytics\/gmb(?:\/|$)/, permission: "org:analytics:read", scope: "org" },
   { pattern: /^\/workflows(?:\/|$)/, permission: "content:view", scope: "session" },
   { pattern: /^\/agents(?:\/|$)/, permission: "content:view", scope: "session" },
   { pattern: /^\/knowledge(?:\/|$)/, permission: "content:view", scope: "session" },

@@ -8,7 +8,10 @@ export type FeatureKey =
   | "workflows"
   | "approval_workflows"
   | "sso"
-  | "agency_mode";
+  | "agency_mode"
+  | "gmb_publishing"
+  | "review_auto_reply"
+  | "magic_qr";
 
 const PLAN_FEATURE_CHECKS: Record<FeatureKey, (features: PlanFeatures) => boolean> = {
   knowledge_base_rag: (f) => f.knowledgeBaseRag,
@@ -17,6 +20,9 @@ const PLAN_FEATURE_CHECKS: Record<FeatureKey, (features: PlanFeatures) => boolea
   approval_workflows: (f) => f.approvalWorkflows,
   sso: (f) => f.sso,
   agency_mode: (f) => f.workflows && f.knowledgeBaseRag,
+  gmb_publishing: (f) => f.gmbPublishing ?? false,
+  review_auto_reply: (f) => f.reviewAutoReply ?? false,
+  magic_qr: (f) => f.magicQr ?? false,
 };
 
 export async function hasFeature(

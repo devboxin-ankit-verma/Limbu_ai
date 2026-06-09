@@ -3,9 +3,6 @@
 CREATE TYPE "WorkflowJobStatus" AS ENUM ('pending', 'processing', 'completed', 'failed', 'dead_letter');
 CREATE TYPE "WorkflowTriggerType" AS ENUM ('manual', 'scheduled', 'webhook', 'database_event', 'file_upload', 'agent');
 
-ALTER TYPE "WorkflowRunStatus" ADD VALUE IF NOT EXISTS 'pending';
-ALTER TYPE "WorkflowRunStatus" ADD VALUE IF NOT EXISTS 'cancelled';
-
 ALTER TABLE "workflows" ADD COLUMN "created_by_id" UUID;
 ALTER TABLE "workflows" ADD COLUMN "description" TEXT;
 ALTER TABLE "workflows" ADD COLUMN "trigger_type" "WorkflowTriggerType" NOT NULL DEFAULT 'manual';
@@ -52,7 +49,6 @@ ALTER TABLE "workflow_runs" ADD COLUMN "metrics" JSONB NOT NULL DEFAULT '{}';
 ALTER TABLE "workflow_runs" ADD COLUMN "error" TEXT;
 ALTER TABLE "workflow_runs" ADD COLUMN "duration_ms" INTEGER;
 ALTER TABLE "workflow_runs" ALTER COLUMN "trigger_event" SET DEFAULT '{}';
-ALTER TABLE "workflow_runs" ALTER COLUMN "status" SET DEFAULT 'pending';
 
 CREATE INDEX "workflow_runs_workflow_id_started_at_idx" ON "workflow_runs"("workflow_id", "started_at");
 

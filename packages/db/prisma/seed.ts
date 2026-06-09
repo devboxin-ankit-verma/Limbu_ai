@@ -10,6 +10,9 @@ async function main() {
     { key: "knowledge_base_rag", defaultValue: false, description: "Workspace knowledge base RAG" },
     { key: "meta_publishing", defaultValue: false, description: "Facebook/Instagram publishing" },
     { key: "agency_mode", defaultValue: false, description: "Multi-workspace agency features" },
+    { key: "gmb_publishing", defaultValue: true, description: "Google Business Profile publishing" },
+    { key: "review_auto_reply", defaultValue: true, description: "AI review auto-reply for paid plans" },
+    { key: "magic_qr", defaultValue: false, description: "Magic QR review funnel" },
   ];
 
   for (const flag of featureFlags) {
@@ -177,6 +180,10 @@ Be helpful, accurate, and concise.`,
   }
 
   console.log("Seeded feature_flags, prompt_templates, plan_entitlements");
+
+  const { seedDevTenant } = await import("./seed-dev-tenant");
+  await seedDevTenant(prisma);
+  console.log("Seeded dev tenant (dev@limbu.local) for local DEV_SKIP_AUTH");
 }
 
 main()

@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "dev": "npm run dev --workspace=@limbu/web",
     "dev:web": "npm run dev --workspace=@limbu/web",
     "dev:worker": "npm run dev --workspace=@limbu/worker",
     "dev:api": "npm run dev --workspace=@limbu/api",
@@ -19,9 +20,14 @@
     "db:setup": "npm run db:setup:neon --workspace=@limbu/db",
     "db:setup:neon": "npm run db:setup:neon --workspace=@limbu/db",
     "db:setup:local": "npm run db:setup:local --workspace=@limbu/db",
-    "db:generate": "npm run db:generate --workspace=@limbu/db"
+    "db:generate": "npm run db:generate --workspace=@limbu/db",
+    "verify:env": "tsx scripts/verify-env.ts",
+    "test:gmb": "tsx scripts/integration-test-gmb.ts"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4"
   }
 }

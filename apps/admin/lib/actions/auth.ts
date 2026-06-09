@@ -35,7 +35,16 @@ export async function loginAction(
         return { error: "Invalid email or password" };
       }
     }
-    throw error;
+
+    const message = error instanceof Error ? error.message : "";
+    if (message.includes("does not exist in the current database")) {
+      return {
+        error: "Database is not set up. Run npm run db:setup:local from the repo root.",
+      };
+    }
+
+    console.error("[admin login]", error);
+    return { error: "Sign-in failed. Check database connection and try again." };
   }
 
   return { success: true };

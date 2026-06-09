@@ -1,0 +1,151 @@
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.app-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.app-nav-brand {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.app-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.app-nav-logo:hover {
+  text-decoration: none;
+}
+
+.app-nav-logo-icon {
+  font-size: 1.25rem;
+}
+
+.app-nav-section {
+  padding: 0.75rem 0.5rem;
+}
+
+.app-nav-section-label {
+  display: block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.app-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.app-nav-link:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.app-nav-link.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.app-nav-icon {
+  font-size: 1rem;
+  width: 1.25rem;
+  text-align: center;
+}
+
+.app-sidebar-footer {
+  margin-top: auto;
+  padding: 0.75rem 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.app-topbar-left,
+.app-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-user-name {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.app-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .app-sidebar {
+    width: 64px;
+  }
+
+  .app-nav-logo span:last-child,
+  .app-nav-section-label,
+  .app-nav-link span:not(.app-nav-icon) {
+    display: none;
+  }
+
+  .app-nav-link {
+    justify-content: center;
+    padding: 0.625rem;
+  }
+}

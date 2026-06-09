@@ -1,4 +1,8 @@
 import { configureAuth } from "@limbu/shared/session";
-import { auth } from "@/auth";
+import { getDevMockSession, isDevAuthBypassEnabled } from "@limbu/shared/dev-session";
 
-configureAuth(() => auth());
+configureAuth(async () => {
+  if (isDevAuthBypassEnabled()) return getDevMockSession();
+  const { auth } = await import("@/auth");
+  return auth();
+});

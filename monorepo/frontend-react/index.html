@@ -1,9 +1,28 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      (function () {
+        var port = window.location.port;
+        if (port === "5173" || port === "5174" || port === "4173") {
+          window.location.replace(
+            "http://localhost:3000" +
+              window.location.pathname +
+              window.location.search +
+              window.location.hash
+          );
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Frontend App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>Pricing Plans | GMB Marketing Tools | Limbu AI</title>
   </head>
   <body>
     <div id="root"></div>

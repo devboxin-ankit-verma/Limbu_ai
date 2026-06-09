@@ -20,6 +20,10 @@
     "./layout/workspace/workspace-nav": "./src/layout/workspace/workspace-nav.tsx",
     "./layout/workspace/workspace-switcher": "./src/layout/workspace/workspace-switcher.tsx",
     "./layout/workspace/workspace-switcher-loader": "./src/layout/workspace/workspace-switcher-loader.tsx",
+    "./layout/app/app-shell": "./src/layout/app/app-shell.tsx",
+    "./layout/app/app-nav": "./src/layout/app/app-nav.tsx",
+    "./components/empty-state": "./src/components/empty-state.tsx",
+    "./components/page-header": "./src/components/page-header.tsx",
     "./styles/globals.css": "./src/styles/globals.css"
   },
   "dependencies": {

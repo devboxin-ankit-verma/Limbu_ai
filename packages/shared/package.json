@@ -11,7 +11,10 @@
     "./validators": "./src/validators/index.ts",
     "./config": "./src/config/index.ts",
     "./api": "./src/api/index.ts",
+    "./api/gmb-errors": "./src/api/gmb-errors.ts",
+    "./api/rate-limit": "./src/api/rate-limit.ts",
     "./session": "./src/session/index.ts",
+    "./dev-session": "./src/dev-session.ts",
     "./middleware": "./src/middleware/index.ts"
   },
   "dependencies": {

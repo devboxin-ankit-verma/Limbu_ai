@@ -1,6 +1,8 @@
 import { WORKER_APP_CONFIG } from "./config";
+import { processPendingIntegrationSyncJobs } from "./jobs/integration-sync";
 import { processPendingIngestJobs } from "./jobs/rag-ingest";
 import { processPendingNotificationJobs } from "./jobs/notifications";
+import { processPendingPublishJobs } from "./jobs/publish";
 import { processPendingJobs } from "./jobs/workflows";
 import { startWorkerServer } from "./server";
 
@@ -21,6 +23,8 @@ async function pollTick() {
     await processPendingJobs(WORKER_APP_CONFIG.workflowBatchSize);
     await processPendingIngestJobs(WORKER_APP_CONFIG.ragBatchSize);
     await processPendingNotificationJobs(WORKER_APP_CONFIG.notificationBatchSize);
+    await processPendingPublishJobs(10);
+    await processPendingIntegrationSyncJobs(5);
   } catch (err) {
     console.error("[worker] poll tick failed:", err);
   }

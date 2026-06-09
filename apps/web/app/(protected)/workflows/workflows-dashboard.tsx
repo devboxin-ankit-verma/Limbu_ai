@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 type Workflow = {
@@ -28,6 +29,7 @@ type Metrics = {
 };
 
 export function WorkflowsDashboardClient() {
+  const router = useRouter();
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
@@ -62,7 +64,7 @@ export function WorkflowsDashboardClient() {
       setError(data.error ?? "Create failed");
       return;
     }
-    window.location.href = `/workflows/${data.workflow.id}`;
+    router.push(`/workflows/${data.workflow.id}`);
   }
 
   async function useTemplate(templateId: string) {
@@ -76,7 +78,7 @@ export function WorkflowsDashboardClient() {
       setError(data.error ?? "Template failed");
       return;
     }
-    window.location.href = `/workflows/${data.workflow.id}`;
+    router.push(`/workflows/${data.workflow.id}`);
   }
 
   return (

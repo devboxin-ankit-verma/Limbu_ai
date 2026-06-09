@@ -51,6 +51,15 @@ CREATE INDEX IF NOT EXISTS reviews_text_fts_idx
   ON reviews USING gin (to_tsvector('english', coalesce(text, '')));
 
 -- =============================================================================
+-- WORKFLOW ENUM EXTENSIONS (must run outside Prisma migrate transaction)
+-- =============================================================================
+ALTER TYPE "WorkflowRunStatus" ADD VALUE IF NOT EXISTS 'pending';
+
+ALTER TYPE "WorkflowRunStatus" ADD VALUE IF NOT EXISTS 'cancelled';
+
+ALTER TABLE workflow_runs ALTER COLUMN status SET DEFAULT 'pending';
+
+-- =============================================================================
 -- ROW-LEVEL SECURITY (enable — policies applied per deployment)
 -- =============================================================================
 -- Example policy template (repeat for all workspace-scoped tables):

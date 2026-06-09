@@ -58,6 +58,10 @@ export const DEFAULT_PLAN_FEATURES: Record<PlanTier, PlanFeatures> = {
     maxKnowledgeDocuments: 5,
     maxAgentRunsPerMonth: 0,
     maxWorkflowRunsPerMonth: 0,
+    gmbPublishing: false,
+    reviewAutoReply: false,
+    magicQr: false,
+    maxLocations: 0,
   },
   [PlanTier.starter]: {
     channels: ["gbp"],
@@ -70,6 +74,10 @@ export const DEFAULT_PLAN_FEATURES: Record<PlanTier, PlanFeatures> = {
     maxKnowledgeDocuments: 25,
     maxAgentRunsPerMonth: 10,
     maxWorkflowRunsPerMonth: 50,
+    gmbPublishing: true,
+    reviewAutoReply: false,
+    magicQr: false,
+    maxLocations: 1,
   },
   [PlanTier.pro]: {
     channels: ["gbp", "facebook", "instagram"],
@@ -82,6 +90,10 @@ export const DEFAULT_PLAN_FEATURES: Record<PlanTier, PlanFeatures> = {
     maxKnowledgeDocuments: 100,
     maxAgentRunsPerMonth: 100,
     maxWorkflowRunsPerMonth: 500,
+    gmbPublishing: true,
+    reviewAutoReply: true,
+    magicQr: true,
+    maxLocations: 5,
   },
   [PlanTier.team]: {
     channels: ["gbp", "facebook", "instagram"],
@@ -94,6 +106,10 @@ export const DEFAULT_PLAN_FEATURES: Record<PlanTier, PlanFeatures> = {
     maxKnowledgeDocuments: 500,
     maxAgentRunsPerMonth: 500,
     maxWorkflowRunsPerMonth: 2000,
+    gmbPublishing: true,
+    reviewAutoReply: true,
+    magicQr: true,
+    maxLocations: null,
   },
   [PlanTier.enterprise]: {
     channels: ["gbp", "facebook", "instagram"],
@@ -106,6 +122,10 @@ export const DEFAULT_PLAN_FEATURES: Record<PlanTier, PlanFeatures> = {
     maxKnowledgeDocuments: 10000,
     maxAgentRunsPerMonth: 10000,
     maxWorkflowRunsPerMonth: 50000,
+    gmbPublishing: true,
+    reviewAutoReply: true,
+    magicQr: true,
+    maxLocations: null,
   },
 };
 

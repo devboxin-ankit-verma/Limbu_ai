@@ -6,8 +6,12 @@
 
 export const ROUTES = {
   HOME: '/',
+  FRANCHISE: '/franchise',
+  PRICING: '/pricing',
+  BLOG: '/blog',
   USERS: '/users',
   USER_DETAIL: (userId: string) => `/users/${userId}`,
   LOGIN: '/login',
-  REGISTER: '/register'
+  REGISTER: '/register',
+  DASHBOARD: '/dashboard',
 } as const;

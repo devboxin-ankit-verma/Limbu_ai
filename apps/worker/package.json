@@ -17,7 +17,9 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@limbu/content": "*",
     "@limbu/db": "*",
+    "@limbu/integrations": "*",
     "@limbu/notifications": "*",
     "@limbu/rag": "*",
     "@limbu/workflows": "*"

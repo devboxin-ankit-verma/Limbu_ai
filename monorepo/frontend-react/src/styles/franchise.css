@@ -1,0 +1,954 @@
+/* Limbu.AI Franchise Landing Page */
+
+.franchise-page {
+  --f-bg: #ffffff;
+  --f-text: #000000;
+  --f-muted: #6b7280;
+  --f-accent: #ffd700;
+  --f-accent-dark: #e6c200;
+  --f-border: #e5e7eb;
+  --f-card-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  --f-radius: 16px;
+  --f-nav-height: 72px;
+
+  min-height: 100vh;
+  background: var(--f-bg);
+  color: var(--f-text);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+.franchise-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.franchise-container {
+  width: min(1280px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.franchise-highlight {
+  color: var(--f-accent);
+}
+
+/* Nav */
+.franchise-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--f-nav-height);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--f-border);
+}
+
+.franchise-nav-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.franchise-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.franchise-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--f-text);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+}
+
+.franchise-logo-icon span {
+  color: var(--f-accent);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.franchise-nav-links {
+  display: none;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+@media (min-width: 1024px) {
+  .franchise-nav-links {
+    display: flex;
+  }
+}
+
+.franchise-nav-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--f-text);
+  transition: color 0.2s;
+}
+
+.franchise-nav-link:hover {
+  color: var(--f-muted);
+}
+
+.franchise-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.franchise-phone-btn {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--f-border);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: var(--f-bg);
+  transition: border-color 0.2s;
+}
+
+@media (min-width: 768px) {
+  .franchise-phone-btn {
+    display: flex;
+  }
+}
+
+.franchise-phone-btn:hover {
+  border-color: var(--f-text);
+}
+
+/* Buttons */
+.franchise-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+}
+
+.franchise-btn-primary {
+  background: var(--f-accent);
+  color: var(--f-text);
+}
+
+.franchise-btn-primary:hover {
+  background: var(--f-accent-dark);
+}
+
+.franchise-btn-secondary {
+  background: var(--f-text);
+  color: var(--f-bg);
+}
+
+.franchise-btn-secondary:hover {
+  background: #333;
+}
+
+.franchise-btn-outline {
+  background: transparent;
+  color: var(--f-text);
+  border: 1px solid var(--f-border);
+}
+
+.franchise-btn-outline:hover {
+  border-color: var(--f-text);
+}
+
+.franchise-btn-lg {
+  padding: 1rem 2rem;
+  font-size: 0.9375rem;
+}
+
+/* Cards */
+.franchise-card {
+  background: var(--f-bg);
+  border: 1px solid var(--f-border);
+  border-radius: var(--f-radius);
+  box-shadow: var(--f-card-shadow);
+}
+
+/* Section headers */
+.franchise-section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.franchise-section-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--f-muted);
+  margin-bottom: 0.75rem;
+}
+
+.franchise-section-title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.franchise-section-subtitle {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--f-muted);
+  max-width: 600px;
+  margin-inline: auto;
+  line-height: 1.6;
+}
+
+/* Hero */
+.franchise-hero {
+  padding: 3rem 0 4rem;
+}
+
+.franchise-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .franchise-hero-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.franchise-hero-tag {
+  display: inline-block;
+  background: var(--f-accent);
+  color: var(--f-text);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.375rem 0.875rem;
+  border-radius: 4px;
+  margin-bottom: 1.25rem;
+}
+
+.franchise-hero-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.franchise-hero-subtitle {
+  font-size: 1rem;
+  color: var(--f-muted);
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+  max-width: 480px;
+}
+
+.franchise-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.franchise-hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.625rem 1.25rem;
+  border: 1px solid var(--f-border);
+  border-radius: 9999px;
+  background: var(--f-bg);
+}
+
+.franchise-hero-stat-value {
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+.franchise-hero-stat-label {
+  font-size: 0.6875rem;
+  color: var(--f-muted);
+  margin-top: 0.125rem;
+}
+
+.franchise-hero-image-wrap {
+  position: relative;
+  border-radius: var(--f-radius);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+.franchise-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.franchise-hero-float-card {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  background: var(--f-bg);
+  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.franchise-hero-float-card span {
+  color: var(--f-accent);
+}
+
+/* Trust stats */
+.franchise-trust {
+  padding: 4rem 0;
+  background: #fafafa;
+}
+
+.franchise-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .franchise-trust-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.franchise-trust-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+.franchise-trust-value {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 0.375rem;
+}
+
+.franchise-trust-label {
+  font-size: 0.8125rem;
+  color: var(--f-muted);
+  font-weight: 500;
+}
+
+/* Advantage grid */
+.franchise-advantage {
+  padding: 5rem 0;
+}
+
+.franchise-advantage-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .franchise-advantage-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .franchise-advantage-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.franchise-feature-card {
+  padding: 1.75rem;
+  transition: box-shadow 0.2s;
+}
+
+.franchise-feature-card:hover {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.franchise-feature-icon {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--f-border);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 1rem;
+  color: var(--f-text);
+}
+
+.franchise-feature-title {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.franchise-feature-desc {
+  font-size: 0.8125rem;
+  color: var(--f-muted);
+  line-height: 1.6;
+}
+
+/* Benefits grid */
+.franchise-benefits {
+  padding: 5rem 0;
+  background: #fafafa;
+}
+
+.franchise-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .franchise-benefits-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.franchise-benefit-card {
+  padding: 1.5rem;
+  transition: box-shadow 0.2s;
+}
+
+.franchise-benefit-card:hover {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.franchise-benefit-title {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.375rem;
+}
+
+.franchise-benefit-desc {
+  font-size: 0.75rem;
+  color: var(--f-muted);
+  line-height: 1.5;
+}
+
+/* Locations */
+.franchise-locations {
+  padding: 5rem 0;
+}
+
+.franchise-locations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .franchise-locations-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .franchise-locations-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.franchise-location-item {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--f-muted);
+  padding: 0.375rem 0;
+  transition: color 0.2s;
+}
+
+.franchise-location-item:hover {
+  color: var(--f-text);
+}
+
+/* Investment diagram */
+.franchise-diagram {
+  padding: 5rem 0;
+  background: #fafafa;
+}
+
+.franchise-diagram-wrap {
+  position: relative;
+  width: min(500px, 100%);
+  margin: 0 auto 3rem;
+  aspect-ratio: 1;
+}
+
+.franchise-diagram-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  background: var(--f-accent);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 2;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+}
+
+.franchise-diagram-center-amount {
+  font-size: 1.125rem;
+  font-weight: 900;
+}
+
+.franchise-diagram-center-label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.franchise-diagram-node {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  background: var(--f-bg);
+  border: 1px solid var(--f-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  box-shadow: var(--f-card-shadow);
+  transform: translate(-50%, -50%);
+}
+
+.franchise-diagram-ring {
+  position: absolute;
+  inset: 10%;
+  border: 1px dashed var(--f-border);
+  border-radius: 50%;
+}
+
+/* Investment card */
+.franchise-investment {
+  padding: 0 0 5rem;
+  background: #fafafa;
+}
+
+.franchise-investment-card {
+  position: relative;
+  padding: 3rem 2rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.franchise-investment-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center top, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.franchise-investment-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--f-muted);
+  margin-bottom: 0.75rem;
+}
+
+.franchise-investment-amount {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 900;
+  margin-bottom: 2rem;
+}
+
+.franchise-investment-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 480px;
+  margin: 0 auto 2rem;
+}
+
+.franchise-investment-highlight {
+  padding: 1.25rem;
+  border: 1px solid var(--f-border);
+  border-radius: 12px;
+  background: var(--f-bg);
+}
+
+.franchise-investment-highlight-value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--f-accent);
+}
+
+.franchise-investment-highlight-label {
+  font-size: 0.75rem;
+  color: var(--f-muted);
+  margin-top: 0.25rem;
+  font-weight: 600;
+}
+
+.franchise-investment-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+@media (min-width: 640px) {
+  .franchise-investment-features {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.franchise-investment-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--f-muted);
+}
+
+.franchise-investment-feature-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--f-border);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+
+/* FAQ */
+.franchise-faq {
+  padding: 5rem 0;
+}
+
+.franchise-faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.franchise-faq-item {
+  border: 1px solid var(--f-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--f-bg);
+}
+
+.franchise-faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.franchise-faq-number {
+  width: 32px;
+  height: 32px;
+  background: var(--f-accent);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.franchise-faq-question {
+  flex: 1;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.franchise-faq-toggle {
+  font-size: 1.25rem;
+  font-weight: 300;
+  color: var(--f-muted);
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.franchise-faq-answer {
+  padding: 0 1.5rem 1.25rem 4.25rem;
+  font-size: 0.875rem;
+  color: var(--f-muted);
+  line-height: 1.7;
+}
+
+/* Final CTA */
+.franchise-cta {
+  padding: 5rem 0;
+}
+
+.franchise-cta-card {
+  position: relative;
+  background: #111111;
+  border-radius: 24px;
+  padding: 4rem 2rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.franchise-cta-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(255, 215, 0, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.franchise-cta-tag {
+  position: relative;
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--f-accent);
+  margin-bottom: 1rem;
+}
+
+.franchise-cta-title {
+  position: relative;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--f-bg);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.franchise-cta-subtitle {
+  position: relative;
+  font-size: 0.9375rem;
+  color: #9ca3af;
+  margin-bottom: 2rem;
+}
+
+.franchise-cta-links {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.franchise-cta-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.franchise-cta-link:hover {
+  color: var(--f-bg);
+}
+
+/* Footer */
+.franchise-footer {
+  background: #f9fafb;
+  border-top: 1px solid var(--f-border);
+  padding: 4rem 0 2rem;
+}
+
+.franchise-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .franchise-footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  }
+}
+
+.franchise-footer-desc {
+  font-size: 0.8125rem;
+  color: var(--f-muted);
+  line-height: 1.6;
+  margin: 1rem 0 1.5rem;
+  max-width: 280px;
+}
+
+.franchise-footer-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.franchise-footer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--f-border);
+  border-radius: 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: var(--f-bg);
+}
+
+.franchise-footer-col-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+.franchise-footer-link {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--f-muted);
+  padding: 0.25rem 0;
+  transition: color 0.2s;
+}
+
+.franchise-footer-link:hover {
+  color: var(--f-text);
+}
+
+.franchise-footer-contact-item {
+  font-size: 0.8125rem;
+  color: var(--f-muted);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.franchise-footer-socials {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.franchise-footer-social {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--f-border);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: var(--f-muted);
+  transition: all 0.2s;
+  background: var(--f-bg);
+}
+
+.franchise-footer-social:hover {
+  color: var(--f-text);
+  border-color: var(--f-text);
+}
+
+.franchise-footer-bottom {
+  border-top: 1px solid var(--f-border);
+  padding-top: 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--f-muted);
+}
+
+/* Mobile menu */
+.franchise-mobile-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--f-border);
+  border-radius: 8px;
+  background: var(--f-bg);
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .franchise-mobile-menu-btn {
+    display: none;
+  }
+}
+
+.franchise-mobile-menu {
+  position: fixed;
+  inset: var(--f-nav-height) 0 0;
+  background: var(--f-bg);
+  z-index: 99;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid var(--f-border);
+}
+
+.franchise-mobile-menu-link {
+  padding: 0.875rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--f-border);
+}

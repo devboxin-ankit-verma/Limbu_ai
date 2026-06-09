@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node -e \"console.error('\\n⚠  Legacy Vite app — UI lives at http://localhost:3000\\n   Run: cd ../../apps/web && npm run dev\\n');\" && vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src/**/*.{ts,tsx}",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "axios": "^1.15.0",
+    "lucide-react": "^1.17.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.30.3",
